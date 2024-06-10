@@ -1,0 +1,32 @@
+footer {
+  background-color: var(--bs-body-bg-rgb);
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+footer .social-list {
+	display: flex;
+	justify-content: flex-end;
+	flex-wrap: wrap;
+}
+
+footer .soc-item {
+	width: 40px;
+	height: 40px;
+	border-radius: 6px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: all 0.3s;
+	margin: 0 5px;
+	background: #3399ff;
+}
+
+@media (max-width: 992px) {
+	.align-left, .align-right {
+		text-align: center;
+	}
+	footer .social-list {
+		justify-content: center;
+	}
+}

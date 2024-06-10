@@ -1,0 +1,52 @@
+{
+  "name": "borders-catholic",
+  "version": "1.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "prod": "ng build --configuration production --cross-origin anonymous",
+    "watch": "ng build --watch --configuration development"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^17.3.0",
+    "@angular/common": "^17.3.0",
+    "@angular/compiler": "^17.3.0",
+    "@angular/core": "^17.3.0",
+    "@angular/forms": "^17.3.11",
+    "@angular/google-maps": "^17.3.10",
+    "@angular/platform-browser": "^17.3.0",
+    "@angular/platform-browser-dynamic": "^17.3.11",
+    "@angular/platform-server": "^17.3.11",
+    "@angular/router": "^17.3.11",
+    "@angular/ssr": "^17.3.8",
+    "@fortawesome/angular-fontawesome": "^0.14.1",
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/free-brands-svg-icons": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@ng-bootstrap/ng-bootstrap": "^16.0.0",
+    "bootstrap": "^5.3.3",
+    "express": "^4.19.2",
+    "ngx-bootstrap": "^12.0.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.6.3",
+    "zone.js": "^0.14.7"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^17.3.8",
+    "@angular/cli": "^17.3.8",
+    "@angular/compiler-cli": "^17.3.8",
+    "@types/express": "^4.17.21",
+    "@types/jasmine": "~5.1.0",
+    "@types/node": "^18.19.34",
+    "jasmine-core": "~5.1.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "typescript": "~5.4.2"
+  },
+  "packageManager": "yarn@1.22.21+sha1.1959a18351b811cdeedbd484a8f86c3cc3bbaf72"
+}
