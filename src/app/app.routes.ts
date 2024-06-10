@@ -1,7 +1,7 @@
 import { Routes } from "@angular/router"
 
-import { HawickHomeComponent } from "./hawick/home/home.component"
-import { HawickSacramentsComponent } from "./hawick/sacraments/sacraments.component"
+import { HawickHomeComponent } from "./home/home.component"
+import { HawickSacramentsComponent } from "./sacraments/sacraments.component"
 
 export const routes: Routes = [
   {
