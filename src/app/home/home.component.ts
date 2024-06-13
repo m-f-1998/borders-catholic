@@ -28,7 +28,7 @@ import { FooterComponent } from '../components/footer/footer.component'
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HawickHomeComponent {
+export class HomeComponent {
   public markers: google.maps.LatLngLiteral [ ] = [
     { lat: 55.42120422298265, lng: -2.7917159397115743 },
     { lat: 55.48180084772263, lng: -2.5512490699400674 },

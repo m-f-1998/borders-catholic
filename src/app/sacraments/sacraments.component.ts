@@ -20,6 +20,6 @@ import { FooterComponent } from '../components/footer/footer.component'
   templateUrl: './sacraments.component.html',
   styleUrl: './sacraments.component.scss'
 })
-export class HawickSacramentsComponent {
+export class SacramentsComponent {
   public currentDate = new Date()
 }
