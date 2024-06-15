@@ -20,7 +20,7 @@ export class ErrorComponent {
 
   public socialLinks = [
     {
-      url: "http://facebook.com/mattfrank48/",
+      url: "https://facebook.com/ss.mary.david",
       icon: "devicon-facebook-plain",
       class: "btn btn-lg btn-icon facebook-link",
       tooltip: "Contact us on Facebook"
