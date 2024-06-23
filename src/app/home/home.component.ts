@@ -1,7 +1,6 @@
 import { Component } from '@angular/core'
 import { GoogleMapsModule } from '@angular/google-maps'
-import { RouterModule } from '@angular/router'
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap'
+import { NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap'
 import { ExpandedImageComponent } from '../components/expanded-image/expanded-image.component'
 import { faChurch } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
@@ -16,20 +15,15 @@ import { HttpClient } from '@angular/common/http'
   selector: 'app-hawick-home',
   standalone: true,
   imports: [
-    RouterModule,
     GoogleMapsModule,
     ExpandedImageComponent,
     FontAwesomeModule,
+    NgbModalModule,
     SundayMassTimesComponent,
     HeaderComponent,
     PriestsComponent,
     ContactComponent,
-    FooterComponent,
-    
-// TODO: `HttpClientModule` should not be imported into a component directly.
-// Please refactor the code to add `provideHttpClient()` call to the provider list in the
-// application bootstrap logic and remove the `HttpClientModule` import from this component.
-HttpClientModule
+    FooterComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -102,38 +96,47 @@ export class HomeComponent {
     this.debounceTimeout = setTimeout ( func, delay )
   }
 
-  public getNewslettersFolder ( ) {
-    if ( Date.now ( ) - this.lastCalled >= this.rateLimit ) {
-      this.lastCalled = Date.now ( )
-      this.debounce ( async ( ) => {
-        let yearID = localStorage.getItem ( 'newsletters_year' )
-        if ( !yearID ) {
-          yearID = await this.getID ( "1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG", new Date ( ).getFullYear ( ).toString ( ) )
-          localStorage.setItem ( 'newsletters_year', yearID as string )
-        }
+  public getFolder ( ) {
+    return new Promise<string> ( ( resolve, reject ) => {
+      if ( Date.now ( ) - this.lastCalled >= this.rateLimit ) {
+        this.lastCalled = Date.now ( )
+        this.debounce ( async ( ) => {
+          let yearID = localStorage.getItem ( 'newsletters_year' )
+          if ( !yearID ) {
+            yearID = await this.getID ( "1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG", new Date ( ).getFullYear ( ).toString ( ) )
+            localStorage.setItem ( 'newsletters_year', yearID as string )
+          }
 
-        let monthID = localStorage.getItem ( 'newsletters_month' )
-        if ( !monthID ) {
-          const monthNum2Dig = ( num: number ) => num < 10 ? `0${num}` : num
-          const monthName = new Date ( ).toLocaleString ( 'default', { month: 'long' } )
-          const folderName = `${monthNum2Dig(new Date().getMonth() + 1)} - ${monthName}`
-          monthID = await this.getID ( yearID, folderName )
-          localStorage.setItem ( 'newsletters_month', monthID as string )
-        }
+          let monthID = localStorage.getItem ( 'newsletters_month' )
+          if ( !monthID ) {
+            const monthNum2Dig = ( num: number ) => num < 10 ? `0${num}` : num
+            const monthName = new Date ( ).toLocaleString ( 'default', { month: 'long' } )
+            const folderName = `${monthNum2Dig(new Date().getMonth() + 1)} - ${monthName}`
+            monthID = await this.getID ( yearID, folderName )
+            localStorage.setItem ( 'newsletters_month', monthID as string )
+          }
 
-        const files = await this.getFiles ( monthID )
-        const date = this.getPreviousSunday ( )
-        const pdf = files.find ( ( x: any ) => x.name === date + ".pdf" )
+          const files = await this.getFiles ( monthID )
+          const date = this.getPreviousSunday ( )
+          const pdf = files.find ( ( x: any ) => x.name === date + ".pdf" )
 
-        if ( pdf ) {
-          const pdfURL = `https://drive.google.com/file/d/${pdf.id}/view`
-          window.open ( pdfURL, '_blank' )
-        } else {
-          window.open ( "https://drive.google.com/drive/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG", '_blank' )
-        }
-      }, 200 )
-    } else {
-      window.open ( "https://drive.google.com/drive/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG", '_blank' )
-    }
+          if ( pdf ) {
+            resolve ( `https://drive.google.com/file/d/${pdf.id}/view` )
+          } else {
+            resolve ( "https://drive.google.com/drive/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG" )
+          }
+        }, 200 )
+      } else {
+        resolve ( "https://drive.google.com/drive/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG" )
+      }
+    } )
+  }
+
+  public openNewsletter ( ) {
+    this.getFolder ( ).then ( ( url: string ) => {
+      setTimeout ( () => {
+        window.open ( url, "_blank" )
+      } )
+    } )
   }
 }
