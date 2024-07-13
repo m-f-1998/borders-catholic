@@ -2,8 +2,8 @@ import { Component } from '@angular/core'
 import { GoogleMapsModule } from '@angular/google-maps'
 import { NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap'
 import { ExpandedImageComponent } from '../components/expanded-image/expanded-image.component'
-import { faChurch } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
+import { faChurch, faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { FaIconComponent, FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { SundayMassTimesComponent } from '../components/sunday-mass-times/sunday-mass-times.component'
 import { HeaderComponent } from '../components/header/header.component'
 import { PriestsComponent } from '../components/priests/priests.component'
@@ -17,13 +17,13 @@ import { HttpClient } from '@angular/common/http'
   imports: [
     GoogleMapsModule,
     ExpandedImageComponent,
-    FontAwesomeModule,
     NgbModalModule,
     SundayMassTimesComponent,
     HeaderComponent,
     PriestsComponent,
     ContactComponent,
-    FooterComponent
+    FooterComponent,
+    FaIconComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -46,6 +46,8 @@ export class HomeComponent {
 
   public zoom = 10
   public faChurch = faChurch
+  public faLoading = faSpinner
+  public newsletterLoading = false
 
   constructor (
     private modalSvc: NgbModal,
@@ -97,23 +99,32 @@ export class HomeComponent {
   }
 
   public getFolder ( ) {
-    return new Promise<string> ( ( resolve, reject ) => {
+    this.newsletterLoading = true
+    return new Promise<string> ( ( resolve ) => {
       if ( Date.now ( ) - this.lastCalled >= this.rateLimit ) {
         this.lastCalled = Date.now ( )
         this.debounce ( async ( ) => {
+          let skip = false
+          if ( !localStorage.getItem ( 'year' ) || !localStorage.getItem ( 'month' ) ) {
+            skip = true
+          }
           let yearID = localStorage.getItem ( 'newsletters_year' )
-          if ( !yearID ) {
+          const yearChange = !skip && localStorage.getItem ( 'year' ) === new Date ( ).getFullYear ( ).toString ( )
+          if ( skip || !yearID || yearChange ) {
             yearID = await this.getID ( "1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG", new Date ( ).getFullYear ( ).toString ( ) )
             localStorage.setItem ( 'newsletters_year', yearID as string )
+            localStorage.setItem ( 'year', new Date ( ).getFullYear ( ).toString ( ) )
           }
 
           let monthID = localStorage.getItem ( 'newsletters_month' )
-          if ( !monthID ) {
+          const monthChange = !skip && localStorage.getItem ( 'month' ) === new Date ( ).toLocaleString ( 'default', { month: 'long' } )
+          if ( skip || !monthID || monthChange ) {
             const monthNum2Dig = ( num: number ) => num < 10 ? `0${num}` : num
             const monthName = new Date ( ).toLocaleString ( 'default', { month: 'long' } )
             const folderName = `${monthNum2Dig(new Date().getMonth() + 1)} - ${monthName}`
             monthID = await this.getID ( yearID, folderName )
             localStorage.setItem ( 'newsletters_month', monthID as string )
+            localStorage.setItem ( 'month', monthName )
           }
 
           const files = await this.getFiles ( monthID )
@@ -125,9 +136,11 @@ export class HomeComponent {
           } else {
             resolve ( "https://drive.google.com/drive/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG" )
           }
-        }, 200 )
+          this.newsletterLoading = false
+        }, 100 )
       } else {
         resolve ( "https://drive.google.com/drive/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG" )
+        this.newsletterLoading = false
       }
     } )
   }
