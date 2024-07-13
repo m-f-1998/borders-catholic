@@ -3,7 +3,7 @@ import { GoogleMapsModule } from '@angular/google-maps'
 import { NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap'
 import { ExpandedImageComponent } from '../components/expanded-image/expanded-image.component'
 import { faChurch, faSpinner } from '@fortawesome/free-solid-svg-icons'
-import { FaIconComponent, FontAwesomeModule } from '@fortawesome/angular-fontawesome'
+import { FaIconComponent } from '@fortawesome/angular-fontawesome'
 import { SundayMassTimesComponent } from '../components/sunday-mass-times/sunday-mass-times.component'
 import { HeaderComponent } from '../components/header/header.component'
 import { PriestsComponent } from '../components/priests/priests.component'
@@ -61,7 +61,7 @@ export class HomeComponent {
   }
 
   private getID ( id: string, folderName: string ) {
-    return new Promise<string> ( ( resolve, reject ) => {
+    return new Promise<string> ( ( resolve ) => {
       this.httpClient.get ( `https://www.googleapis.com/drive/v3/files?key=AIzaSyALY_aYqEMGP6CChumMDc9sLJ1X8e4q6Dg&q=%27${id}%27%20in%20parents` ).subscribe ( ( response: any ) => {
         resolve ( response.files.find ( ( x: any ) => x.name === folderName ).id )
       } )
@@ -69,7 +69,7 @@ export class HomeComponent {
   }
 
   private getFiles ( id: string ): any {
-    return new Promise<string> ( ( resolve, reject ) => {
+    return new Promise<string> ( ( resolve ) => {
       this.httpClient.get ( `https://www.googleapis.com/drive/v3/files?key=AIzaSyALY_aYqEMGP6CChumMDc9sLJ1X8e4q6Dg&q=%27${id}%27%20in%20parents` ).subscribe ( ( response: any ) => {
         resolve ( response.files )
       } )
@@ -83,6 +83,11 @@ export class HomeComponent {
     const previousSunday = new Date ( today )
     previousSunday.setDate ( today.getDate() - daysSinceSunday )
 
+    if ( today.getDay ( ) === 6 ) {
+      previousSunday.setDate ( today.getDate ( ) + 1 )
+    } else {
+      previousSunday.setDate ( today.getDate() - daysSinceSunday )
+    }
     const year = previousSunday.getFullYear ( )
     const month = String ( previousSunday.getMonth ( ) + 1 ).padStart ( 2, "0" )
     const day = String ( previousSunday.getDate ( ) ).padStart ( 2, "0" )
@@ -99,7 +104,6 @@ export class HomeComponent {
   }
 
   public getFolder ( ) {
-    this.newsletterLoading = true
     return new Promise<string> ( ( resolve ) => {
       if ( Date.now ( ) - this.lastCalled >= this.rateLimit ) {
         this.lastCalled = Date.now ( )
@@ -136,20 +140,21 @@ export class HomeComponent {
           } else {
             resolve ( "https://drive.google.com/drive/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG" )
           }
-          this.newsletterLoading = false
         }, 100 )
       } else {
         resolve ( "https://drive.google.com/drive/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG" )
-        this.newsletterLoading = false
       }
     } )
   }
 
   public openNewsletter ( ) {
+    this.newsletterLoading = true
     this.getFolder ( ).then ( ( url: string ) => {
-      setTimeout ( () => {
-        window.open ( url, "_blank" )
-      } )
+      window.location.href = url
+      this.newsletterLoading = false
+    } ).catch ( e => {
+      console.error ( e )
+      this.newsletterLoading = false
     } )
   }
 }
