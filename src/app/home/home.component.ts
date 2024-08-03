@@ -111,6 +111,10 @@ export class HomeComponent {
           if ( !localStorage.getItem ( 'year' ) || !localStorage.getItem ( 'month' ) ) {
             skip = true
           }
+          // TODO: Delete Below on Next Update
+          if ( !skip && localStorage.getItem ( 'year' ) === "2024" && localStorage.getItem ( 'month' ) == "July" ) {
+            skip = true
+          }
           let yearID = localStorage.getItem ( 'newsletters_year' )
           const yearChange = !skip && localStorage.getItem ( 'year' ) === new Date ( ).getFullYear ( ).toString ( )
           if ( skip || !yearID || yearChange ) {
