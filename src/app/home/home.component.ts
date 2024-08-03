@@ -81,12 +81,11 @@ export class HomeComponent {
     const daysSinceSunday = today.getDay ( )
 
     const previousSunday = new Date ( today )
-    previousSunday.setDate ( today.getDate() - daysSinceSunday )
 
     if ( today.getDay ( ) === 6 ) {
       previousSunday.setDate ( today.getDate ( ) + 1 )
     } else {
-      previousSunday.setDate ( today.getDate() - daysSinceSunday )
+      previousSunday.setDate ( today.getDate ( ) - daysSinceSunday )
     }
     const year = previousSunday.getFullYear ( )
     const month = String ( previousSunday.getMonth ( ) + 1 ).padStart ( 2, "0" )
