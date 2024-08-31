@@ -115,27 +115,32 @@ export class HomeComponent {
           if ( !skip && localStorage.getItem ( 'year' ) === "2024" && localStorage.getItem ( 'month' ) == "July" ) {
             skip = true
           }
+
+          const date: string = this.getPreviousSunday ( )
+          const sunday = new Date ( date )
+
           let yearID = localStorage.getItem ( 'newsletters_year' )
-          const yearChange = !skip && localStorage.getItem ( 'year' ) === new Date ( ).getFullYear ( ).toString ( )
+          const yearChange = !skip && localStorage.getItem ( 'year' ) !== sunday.getFullYear ( ).toString ( )
+
           if ( skip || !yearID || yearChange ) {
-            yearID = await this.getID ( "1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG", new Date ( ).getFullYear ( ).toString ( ) )
+            yearID = await this.getID ( "1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG", sunday.getFullYear ( ).toString ( ) )
             localStorage.setItem ( 'newsletters_year', yearID as string )
-            localStorage.setItem ( 'year', new Date ( ).getFullYear ( ).toString ( ) )
+            localStorage.setItem ( 'year', sunday.getFullYear ( ).toString ( ) )
           }
 
           let monthID = localStorage.getItem ( 'newsletters_month' )
-          const monthChange = !skip && localStorage.getItem ( 'month' ) === new Date ( ).toLocaleString ( 'default', { month: 'long' } )
+          const monthChange = !skip && localStorage.getItem ( 'month' ) !== sunday.toLocaleString ( 'default', { month: 'long' } )
+
           if ( skip || !monthID || monthChange ) {
             const monthNum2Dig = ( num: number ) => num < 10 ? `0${num}` : num
-            const monthName = new Date ( ).toLocaleString ( 'default', { month: 'long' } )
-            const folderName = `${monthNum2Dig(new Date().getMonth() + 1)} - ${monthName}`
+            const monthName = sunday.toLocaleString ( 'default', { month: 'long' } )
+            const folderName = `${monthNum2Dig(sunday.getMonth() + 1)} - ${monthName}`
             monthID = await this.getID ( yearID, folderName )
             localStorage.setItem ( 'newsletters_month', monthID as string )
             localStorage.setItem ( 'month', monthName )
           }
 
           const files = await this.getFiles ( monthID )
-          const date = this.getPreviousSunday ( )
           const pdf = files.find ( ( x: any ) => x.name === date + ".pdf" )
 
           if ( pdf ) {
