@@ -36,12 +36,13 @@ export class HomeComponent {
   ]
   public center: google.maps.LatLngLiteral = { lat: 55.48180084772263, lng: -2.5512490699400674 }
   public images: string [ ] = [
-    "/assets/img/hawick/parish-6.jpg",
-    "/assets/img/hawick/parish-5.jpg",
-    "/assets/img/hawick/parish-4.jpg",
-    "/assets/img/hawick/parish-3.jpg",
-    "/assets/img/hawick/parish-2.jpg",
-    "/assets/img/hawick/parish-1.jpg"
+    "/assets/img/parish/parish-6.jpg",
+    "/assets/img/parish/parish-5.jpg",
+    "/assets/img/parish/parish-4.jpg",
+    "/assets/img/parish/parish-7.jpg",
+    "/assets/img/parish/parish-3.jpg",
+    "/assets/img/parish/parish-2.jpg",
+    "/assets/img/parish/parish-1.jpg"
   ]
 
   public zoom = 10
@@ -164,5 +165,9 @@ export class HomeComponent {
       console.error ( e )
       this.newsletterLoading = false
     } )
+  }
+
+  public openNewsletterArchive ( ) {
+    window.location.href = "https://drive.google.com/drive/u/0/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG"
   }
 }
