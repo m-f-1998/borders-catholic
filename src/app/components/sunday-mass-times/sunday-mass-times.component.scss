@@ -6,13 +6,16 @@
 	transition: all 0.3s;
   background-color: var(--bs-secondary-bg);
 }
+
 .card-wrapper:hover {
 	background: #3399ff;
 }
+
 .card-wrapper:hover .card-title,
 .card-wrapper:hover .card-text {
 	color: #ffffff;
 }
+
 @media (max-width: 767px) {
 	.card-wrapper {
 		padding: 2rem 1rem;

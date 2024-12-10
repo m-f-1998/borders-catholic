@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common"
-import { Component, Input} from "@angular/core"
+import { ChangeDetectionStrategy, Component, Input} from "@angular/core"
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap"
 
 @Component ( {
@@ -7,7 +7,8 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap"
   imports: [
     CommonModule
   ],
-  templateUrl: "./expanded-image.component.html"
+  templateUrl: "./expanded-image.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class ExpandedImageComponent {
 

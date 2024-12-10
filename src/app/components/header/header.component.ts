@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common"
-import { Component, Input} from "@angular/core"
+import { ChangeDetectionStrategy, Component, Input} from "@angular/core"
 import { Router, RouterModule } from "@angular/router"
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap"
 
@@ -12,7 +12,8 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap"
     NgbModule,
   ],
   templateUrl: "./header.component.html",
-  styleUrl: "./header.component.scss"
+  styleUrl: "./header.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class HeaderComponent {
 

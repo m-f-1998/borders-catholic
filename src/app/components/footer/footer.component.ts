@@ -1,8 +1,8 @@
 import { CommonModule } from "@angular/common"
-import { Component, Input } from "@angular/core"
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome"
-import { faFacebookF, faInstagram, faYoutube } from "@fortawesome/free-brands-svg-icons"
-import { faEnvelope } from "@fortawesome/free-solid-svg-icons"
+import { faFacebookF, faGithub, faInstagram, faLinkedin, faYoutube } from "@fortawesome/free-brands-svg-icons"
+import { faEnvelope, faGlobe } from "@fortawesome/free-solid-svg-icons"
 
 @Component ( {
   selector: "app-footer",
@@ -12,20 +12,25 @@ import { faEnvelope } from "@fortawesome/free-solid-svg-icons"
     FontAwesomeModule
   ],
   templateUrl: "./footer.component.html",
-  styleUrl: "./footer.component.scss"
+  styleUrl: "./footer.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class FooterComponent {
 
   public currentDate = new Date ( )
 
-  public faFacebook = faFacebookF
-  public faYoutube = faYoutube
-  public faEnvelope = faEnvelope
-  public faInstagram = faInstagram
+  public faGithub: any = faGithub
+  public faLinkedin: any = faLinkedin
+  public faEmail: any = faEnvelope
+  public faWebsite: any = faGlobe
 
-  @Input ( ) public email: string = ""
-  @Input ( ) public facebook: string = ""
-  @Input ( ) public youtube: string = ""
-  @Input ( ) public instagram: string = ""
+  public copyrightNotice ( ) {
+    const year = new Date ( ).getFullYear ( )
+    return `© ${year}. All rights reserved.`
+  }
+
+  public goToAuthor ( ) {
+    window.location.href = "https://matthewfrankland.co.uk"
+  }
 
 }

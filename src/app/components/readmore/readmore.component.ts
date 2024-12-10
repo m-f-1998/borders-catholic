@@ -1,12 +1,13 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core"
 
-@Component({
-  selector: 'app-readmore',
+@Component ( {
+  selector: "app-readmore",
   standalone: true,
-  imports: [],
-  templateUrl: './readmore.component.html',
-  styleUrl: './readmore.component.scss'
-})
+  imports: [ ],
+  templateUrl: "./readmore.component.html",
+  styleUrl: "./readmore.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush
+} )
 export class ReadmoreComponent {
 
   @Input ( ) public subtitle?: string

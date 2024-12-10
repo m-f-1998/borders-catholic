@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core"
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome"
 import { faChurch } from "@fortawesome/free-solid-svg-icons"
 
@@ -9,7 +9,8 @@ import { faChurch } from "@fortawesome/free-solid-svg-icons"
     FontAwesomeModule
   ],
   templateUrl: "./sunday-mass-times.component.html",
-  styleUrl: "./sunday-mass-times.component.scss"
+  styleUrl: "./sunday-mass-times.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class SundayMassTimesComponent {
   @Input ( ) public massTimes: Array<{

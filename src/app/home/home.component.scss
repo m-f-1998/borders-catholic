@@ -48,3 +48,22 @@ div.scroll-container img:hover {
 .header .mbr-section-subtitle {
 	color: #3399ff;
 }
+
+.soc-item {
+	width: 40px;
+	height: 40px;
+	border-radius: 6px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: all 0.3s;
+	margin: 0 5px;
+	background: #3399ff;
+}
+
+.social-list {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  margin-top: 10px;
+}

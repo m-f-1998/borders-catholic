@@ -1,22 +1,22 @@
-import { Component } from '@angular/core'
-import { GoogleMapsModule } from '@angular/google-maps'
-import { NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap'
-import { ExpandedImageComponent } from '../components/expanded-image/expanded-image.component'
-import { faChurch, faSpinner } from '@fortawesome/free-solid-svg-icons'
-import { FaIconComponent } from '@fortawesome/angular-fontawesome'
-import { SundayMassTimesComponent } from '../components/sunday-mass-times/sunday-mass-times.component'
-import { HeaderComponent } from '../components/header/header.component'
-import { PriestsComponent } from '../components/priests/priests.component'
-import { ContactComponent } from '../components/contact/contact.component'
-import { FooterComponent } from '../components/footer/footer.component'
-import { HttpClient } from '@angular/common/http'
+import { ChangeDetectionStrategy, Component } from "@angular/core"
+import { GoogleMapsModule } from "@angular/google-maps"
+import { NgbModal, NgbModalModule } from "@ng-bootstrap/ng-bootstrap"
+import { ExpandedImageComponent } from "@components/expanded-image/expanded-image.component"
+import { faChurch, faEnvelope, faSpinner } from "@fortawesome/free-solid-svg-icons"
+import { FaIconComponent } from "@fortawesome/angular-fontawesome"
+import { SundayMassTimesComponent } from "@components/sunday-mass-times/sunday-mass-times.component"
+import { HeaderComponent } from "@components/header/header.component"
+import { PriestsComponent } from "@components/priests/priests.component"
+import { ContactComponent } from "@components/contact/contact.component"
+import { FooterComponent } from "@components/footer/footer.component"
+import { HttpClient } from "@angular/common/http"
+import { faFacebookF, faInstagram, faYoutube } from "@fortawesome/free-brands-svg-icons"
 
-@Component({
-  selector: 'app-hawick-home',
+@Component ( {
+  selector: "app-hawick-home",
   standalone: true,
   imports: [
     GoogleMapsModule,
-    ExpandedImageComponent,
     NgbModalModule,
     SundayMassTimesComponent,
     HeaderComponent,
@@ -25,9 +25,10 @@ import { HttpClient } from '@angular/common/http'
     FooterComponent,
     FaIconComponent
   ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
-})
+  templateUrl: "./home.component.html",
+  styleUrl: "./home.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush
+} )
 export class HomeComponent {
   public markers: google.maps.LatLngLiteral [ ] = [
     { lat: 55.42120422298265, lng: -2.7917159397115743 },
@@ -50,13 +51,18 @@ export class HomeComponent {
   public faLoading = faSpinner
   public newsletterLoading = false
 
+  public faFacebook = faFacebookF
+  public faYoutube = faYoutube
+  public faEnvelope = faEnvelope
+  public faInstagram = faInstagram
+
   constructor (
     private modalSvc: NgbModal,
     private httpClient: HttpClient
   ) { }
 
   public expandImage ( index: number ) {
-    const reference = this.modalSvc.open ( ExpandedImageComponent, { size: 'lg', centered: true } )
+    const reference = this.modalSvc.open ( ExpandedImageComponent, { size: "lg", centered: true } )
     reference.componentInstance.imageURLs = this.images
     reference.componentInstance.index = index
   }
@@ -109,36 +115,32 @@ export class HomeComponent {
         this.lastCalled = Date.now ( )
         this.debounce ( async ( ) => {
           let skip = false
-          if ( !localStorage.getItem ( 'year' ) || !localStorage.getItem ( 'month' ) ) {
-            skip = true
-          }
-          // TODO: Delete Below on Next Update
-          if ( !skip && localStorage.getItem ( 'year' ) === "2024" && localStorage.getItem ( 'month' ) == "July" ) {
+          if ( !localStorage.getItem ( "year" ) || !localStorage.getItem ( "month" ) ) {
             skip = true
           }
 
           const date: string = this.getPreviousSunday ( )
           const sunday = new Date ( date )
 
-          let yearID = localStorage.getItem ( 'newsletters_year' )
-          const yearChange = !skip && localStorage.getItem ( 'year' ) !== sunday.getFullYear ( ).toString ( )
+          let yearID = localStorage.getItem ( "newsletters_year" )
+          const yearChange = !skip && localStorage.getItem ( "year" ) !== sunday.getFullYear ( ).toString ( )
 
           if ( skip || !yearID || yearChange ) {
             yearID = await this.getID ( "1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG", sunday.getFullYear ( ).toString ( ) )
-            localStorage.setItem ( 'newsletters_year', yearID as string )
-            localStorage.setItem ( 'year', sunday.getFullYear ( ).toString ( ) )
+            localStorage.setItem ( "newsletters_year", yearID as string )
+            localStorage.setItem ( "year", sunday.getFullYear ( ).toString ( ) )
           }
 
-          let monthID = localStorage.getItem ( 'newsletters_month' )
-          const monthChange = !skip && localStorage.getItem ( 'month' ) !== sunday.toLocaleString ( 'default', { month: 'long' } )
+          let monthID = localStorage.getItem ( "newsletters_month" )
+          const monthChange = !skip && localStorage.getItem ( "month" ) !== sunday.toLocaleString ( "default", { month: "long" } )
 
           if ( skip || !monthID || monthChange ) {
             const monthNum2Dig = ( num: number ) => num < 10 ? `0${num}` : num
-            const monthName = sunday.toLocaleString ( 'default', { month: 'long' } )
+            const monthName = sunday.toLocaleString ( "default", { month: "long" } )
             const folderName = `${monthNum2Dig(sunday.getMonth() + 1)} - ${monthName}`
             monthID = await this.getID ( yearID, folderName )
-            localStorage.setItem ( 'newsletters_month', monthID as string )
-            localStorage.setItem ( 'month', monthName )
+            localStorage.setItem ( "newsletters_month", monthID as string )
+            localStorage.setItem ( "month", monthName )
           }
 
           const files = await this.getFiles ( monthID )

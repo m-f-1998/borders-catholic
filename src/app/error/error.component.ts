@@ -1,16 +1,17 @@
-import { Component } from "@angular/core"
+import { ChangeDetectionStrategy, Component } from "@angular/core"
 import { ActivatedRoute, Router } from "@angular/router"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome"
 import { faHome } from "@fortawesome/free-solid-svg-icons"
 
-@Component({
+@Component ( {
   selector: "app-error",
   standalone: true,
   imports: [
     FontAwesomeModule
   ],
   templateUrl: "./error.component.html",
-  styleUrl: "./error.component.scss"
+  styleUrl: "./error.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class ErrorComponent {
 

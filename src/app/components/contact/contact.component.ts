@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common"
-import { Component, Input } from "@angular/core"
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome"
 import { faEnvelope, faEnvelopeOpen, faGlobe, faMapPin, faMobileAlt, faPhone } from "@fortawesome/free-solid-svg-icons"
 
@@ -11,7 +11,8 @@ import { faEnvelope, faEnvelopeOpen, faGlobe, faMapPin, faMobileAlt, faPhone } f
     FontAwesomeModule
   ],
   templateUrl: "./contact.component.html",
-  styleUrl: "./contact.component.scss"
+  styleUrl: "./contact.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class ContactComponent {
   public faPhone = faPhone
