@@ -67,3 +67,10 @@ div.scroll-container img:hover {
   gap: 5px;
   margin-top: 10px;
 }
+
+// Add less than 768px width media query
+@media (max-width: 768px) {
+  .social-list {
+    justify-content: center;
+  }
+}
