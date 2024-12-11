@@ -3,12 +3,11 @@ import { ChangeDetectionStrategy, Component, Input} from "@angular/core"
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap"
 
 @Component ( {
-  standalone: true,
-  imports: [
-    CommonModule
-  ],
-  templateUrl: "./expanded-image.component.html",
-  changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [
+        CommonModule
+    ],
+    templateUrl: "./expanded-image.component.html",
+    changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class ExpandedImageComponent {
 

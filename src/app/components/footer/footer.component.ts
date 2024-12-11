@@ -5,15 +5,14 @@ import { faFacebookF, faGithub, faInstagram, faLinkedin, faYoutube } from "@fort
 import { faEnvelope, faGlobe } from "@fortawesome/free-solid-svg-icons"
 
 @Component ( {
-  selector: "app-footer",
-  standalone: true,
-  imports: [
-    CommonModule,
-    FontAwesomeModule
-  ],
-  templateUrl: "./footer.component.html",
-  styleUrl: "./footer.component.scss",
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: "app-footer",
+    imports: [
+        CommonModule,
+        FontAwesomeModule
+    ],
+    templateUrl: "./footer.component.html",
+    styleUrl: "./footer.component.scss",
+    changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class FooterComponent {
 

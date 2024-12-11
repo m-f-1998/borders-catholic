@@ -4,14 +4,13 @@ import { FontAwesomeModule } from "@fortawesome/angular-fontawesome"
 import { faHome } from "@fortawesome/free-solid-svg-icons"
 
 @Component ( {
-  selector: "app-error",
-  standalone: true,
-  imports: [
-    FontAwesomeModule
-  ],
-  templateUrl: "./error.component.html",
-  styleUrl: "./error.component.scss",
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: "app-error",
+    imports: [
+        FontAwesomeModule
+    ],
+    templateUrl: "./error.component.html",
+    styleUrl: "./error.component.scss",
+    changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class ErrorComponent {
 

@@ -2,14 +2,13 @@ import { CommonModule } from "@angular/common"
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core"
 
 @Component ( {
-  selector: "app-priests",
-  standalone: true,
-  imports: [
-    CommonModule
-  ],
-  templateUrl: "./priests.component.html",
-  styleUrl: "./priests.component.scss",
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: "app-priests",
+    imports: [
+        CommonModule
+    ],
+    templateUrl: "./priests.component.html",
+    styleUrl: "./priests.component.scss",
+    changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class PriestsComponent {
   @Input ( ) public priests: Array<

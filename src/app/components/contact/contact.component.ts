@@ -4,15 +4,14 @@ import { FontAwesomeModule } from "@fortawesome/angular-fontawesome"
 import { faEnvelope, faEnvelopeOpen, faGlobe, faMapPin, faMobileAlt, faPhone } from "@fortawesome/free-solid-svg-icons"
 
 @Component ( {
-  selector: "app-contact",
-  standalone: true,
-  imports: [
-    CommonModule,
-    FontAwesomeModule
-  ],
-  templateUrl: "./contact.component.html",
-  styleUrl: "./contact.component.scss",
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: "app-contact",
+    imports: [
+        CommonModule,
+        FontAwesomeModule
+    ],
+    templateUrl: "./contact.component.html",
+    styleUrl: "./contact.component.scss",
+    changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class ContactComponent {
   public faPhone = faPhone

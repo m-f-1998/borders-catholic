@@ -13,21 +13,20 @@ import { HttpClient } from "@angular/common/http"
 import { faFacebookF, faInstagram, faYoutube } from "@fortawesome/free-brands-svg-icons"
 
 @Component ( {
-  selector: "app-hawick-home",
-  standalone: true,
-  imports: [
-    GoogleMapsModule,
-    NgbModalModule,
-    SundayMassTimesComponent,
-    HeaderComponent,
-    PriestsComponent,
-    ContactComponent,
-    FooterComponent,
-    FaIconComponent
-  ],
-  templateUrl: "./home.component.html",
-  styleUrl: "./home.component.scss",
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: "app-hawick-home",
+    imports: [
+        GoogleMapsModule,
+        NgbModalModule,
+        SundayMassTimesComponent,
+        HeaderComponent,
+        PriestsComponent,
+        ContactComponent,
+        FooterComponent,
+        FaIconComponent
+    ],
+    templateUrl: "./home.component.html",
+    styleUrl: "./home.component.scss",
+    changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class HomeComponent {
   public markers: google.maps.LatLngLiteral [ ] = [
