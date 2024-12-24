@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core"
+import { ChangeDetectionStrategy, Component, signal } from "@angular/core"
 import { GoogleMapsModule } from "@angular/google-maps"
 import { NgbModal, NgbModalModule } from "@ng-bootstrap/ng-bootstrap"
 import { ExpandedImageComponent } from "@components/expanded-image/expanded-image.component"
@@ -48,7 +48,7 @@ export class HomeComponent {
   public zoom = 10
   public faChurch = faChurch
   public faLoading = faSpinner
-  public newsletterLoading = false
+  public newsletterLoading = signal ( false )
 
   public faFacebook = faFacebookF
   public faYoutube = faYoutube
@@ -158,17 +158,17 @@ export class HomeComponent {
   }
 
   public openNewsletter ( ) {
-    this.newsletterLoading = true
+    this.newsletterLoading.set ( true )
     this.getFolder ( ).then ( ( url: string ) => {
       window.location.href = url
-      this.newsletterLoading = false
     } ).catch ( e => {
       console.error ( e )
-      this.newsletterLoading = false
+    } ).finally ( ( ) => {
+      this.newsletterLoading.set ( false )
     } )
   }
 
   public openNewsletterArchive ( ) {
-    window.location.href = "https://drive.google.com/drive/u/0/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG"
+    window.location.href = "https://drive.google.com/drive/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG"
   }
 }

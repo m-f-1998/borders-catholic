@@ -27,8 +27,8 @@
                     </p>
                     <div class="mbr-section-btn mt-4">
                         <button class="btn btn-primary display-4" (click)="openNewsletter()" style="border-radius: 100px;">
-                            @if (newsletterLoading) {
-                                <fa-icon [icon]="faLoading" [animation]="'spin'" />
+                            @if (newsletterLoading()) {
+                                <fa-icon [icon]="faLoading" animation="spin" />
                             } @else {
                                 Access This Weeks Newsletter
                             }
