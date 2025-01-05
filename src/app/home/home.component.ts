@@ -36,6 +36,7 @@ export class HomeComponent {
   ]
   public center: google.maps.LatLngLiteral = { lat: 55.48180084772263, lng: -2.5512490699400674 }
   public images: string [ ] = [
+    "/assets/img/parish/parish-8.jpg",
     "/assets/img/parish/parish-6.jpg",
     "/assets/img/parish/parish-5.jpg",
     "/assets/img/parish/parish-4.jpg",
