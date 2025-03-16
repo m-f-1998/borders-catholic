@@ -12,12 +12,12 @@
     "@angular/common": "^19.0.3",
     "@angular/compiler": "^19.0.3",
     "@angular/core": "^19.0.3",
-    "@angular/forms": "^19.1.6",
-    "@angular/google-maps": "^19.1.4",
+    "@angular/forms": "^19.2.2",
+    "@angular/google-maps": "^19.2.3",
     "@angular/platform-browser": "^19.0.3",
-    "@angular/platform-browser-dynamic": "^19.1.6",
-    "@angular/platform-server": "^19.1.6",
-    "@angular/router": "^19.1.6",
+    "@angular/platform-browser-dynamic": "^19.2.2",
+    "@angular/platform-server": "^19.2.2",
+    "@angular/router": "^19.2.2",
     "@fortawesome/angular-fontawesome": "^1.0.0",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
@@ -28,10 +28,10 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@angular/build": "^19.1.7",
-    "@angular/cli": "^19.1.7",
+    "@angular/build": "^19.2.3",
+    "@angular/cli": "^19.2.3",
     "@angular/compiler-cli": "^19.0.3",
-    "@types/node": "^22.13.4",
-    "typescript": "^5.7.3"
+    "@types/node": "^22.13.10",
+    "typescript": "^5.8.2"
   }
 }
