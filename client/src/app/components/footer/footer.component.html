@@ -1,0 +1,29 @@
+<footer id="footer" class="footer position-relative" style="background-color:var(--bs-secondary-bg)">
+    <div class="container">
+      <div class="d-flex justify-content-center align-items-center" (click)="goToAuthor()">
+        <img src="/assets/img/author.jpg" alt="Matthew Frankland" class="clickable" style="border: 2px white solid; width: 60px; border-radius: 50%; margin-right: 10px;">
+      </div>
+      <div class="credits mt-2">
+        <div class="copyright">
+            <span>
+              {{copyrightNotice()}}
+            </span>
+          </div>
+        Designed by <strong class="px-1 sitename">Matthew Frankland</strong>
+      </div>
+      <div class="social-links d-flex justify-content-center mt-2">
+        <a href="mailto:admin@matthewfrankland.co.uk" class="soc-item btn-primary">
+          <fa-icon [icon]="faEmail" class="text-light"></fa-icon>
+        </a>
+        <a href="https://github.com/m-f-1998" class="soc-item btn-primary">
+          <fa-icon [icon]="faGithub" class="text-light"></fa-icon>
+        </a>
+        <a href="https://www.linkedin.com/in/mf48/" class="soc-item btn-primary">
+          <fa-icon [icon]="faLinkedin" class="text-light"></fa-icon>
+        </a>
+        <a href="https://matthewfrankland.co.uk" class="soc-item btn-primary">
+          <fa-icon [icon]="faWebsite" class="text-light"></fa-icon>
+        </a>
+      </div>
+    </div>
+</footer>

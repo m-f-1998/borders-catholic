@@ -1,0 +1,32 @@
+{
+  "name": "borders-catholic-server",
+  "version": "1.0.0",
+  "description": "Server for Borders Catholic website",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "npm i",
+    "start": "node --env-file=.env --watch ./ index.js",
+    "dev": "npm run prestart && npx --yes nodemon -e ts --exec \"tsc && node ./dist/index.js\"",
+    "lint": "npx --yes eslint",
+    "lint:fix": "npx --yes eslint --fix",
+    "tsc-verify": "npx --yes tsc --noEmit"
+  },
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "eslint": "^9.30.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.1",
+    "helmet": "^8.1.0",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@stylistic/eslint-plugin": "^5.1.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/helmet": "^0.0.48",
+    "eslint-plugin-import": "^2.32.0",
+    "typescript-eslint": "^8.35.1"
+  }
+}

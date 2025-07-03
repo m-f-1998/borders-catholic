@@ -1,0 +1,76 @@
+.scroll-container {
+  background-color: #333;
+  white-space: nowrap;
+  padding: 10px;
+  flex-direction: row;
+  display: flex;
+  overflow-y: scroll;
+}
+
+div.scroll-container img {
+  padding: 10px;
+}
+
+div.scroll-container img:hover {
+  transform: scale(1.05);
+  transition: all 1s;
+}
+
+.img-expand {
+  max-width: 600px;
+  max-height: 400px;
+  object-fit: contain;
+  cursor: pointer;
+  border-radius: 20px;
+}
+
+.header {
+	padding-top: 5rem;
+	padding-bottom: 5rem;
+	background-image: url("/assets/img/header.jpg");
+	background-size: cover;
+	background-position: center;
+}
+
+.header .mbr-section-title {
+	color: #ffffff;
+}
+
+.header .mbr-text,
+.header .mbr-section-btn {
+	color: #bbbbbb;
+}
+
+.header img {
+	border-radius: 2rem;
+}
+
+.header .mbr-section-subtitle {
+	color: #3399ff;
+}
+
+.soc-item {
+	width: 40px;
+	height: 40px;
+	border-radius: 6px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: all 0.3s;
+	margin: 0 5px;
+	background: #3399ff;
+}
+
+.social-list {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+// Add less than 768px width media query
+@media (max-width: 768px) {
+  .social-list {
+    justify-content: center;
+  }
+}

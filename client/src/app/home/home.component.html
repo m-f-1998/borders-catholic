@@ -1,0 +1,102 @@
+<app-header currentPage="" churchName="" />
+
+<section class="header">
+  <div class="mbr-overlay" style="opacity: 0.9; background-color: rgb(40, 43, 47);"></div>
+  <div class="container">
+      <div class="row align-left justify-content-center align-content-around">
+          <div class="col-12 col-lg col-md-12 md-pb">
+              <div class="text-wrapper">
+                    <h1 class="mbr-section-title mbr-fonts-style align-left display-1">
+                        <strong>Ss Mary & Davids</strong>
+                    </h1>
+                    <h2 class="mbr-section-subtitle mbr-fonts-style mb-2 align-left display-7">
+                        <strong>A Roman Catholic Parish in the Scottish Borders</strong>
+                    </h2>
+                    <h3 class="mbr-text mbr-fonts-style mb-3 align-left display-7">Hawick; Jedburgh; Kelso</h3>
+                    <div class="social-list mb-3">
+                        <a href="https://www.facebook.com/profile.php?id=100079676379609" target="_blank" class="soc-item btn-primary">
+                            <fa-icon [icon]="faFacebook" class="text-light" />
+                        </a>
+                        <a href="mailto:catholic363@gmail.com" target="_blank" class="soc-item btn-primary">
+                            <fa-icon [icon]="faEnvelope" class="text-light" />
+                        </a>
+                    </div>
+                    <p class="mbr-text mbr-fonts-style align-left display-7">
+                        Our world is hurting. We all need healing, yet many of us are separated from the very source of our strength. Jesus Christ invites us to the celebration of the Eucharist, which is the source and summit of our Parish life.
+                        <br /><br />May God bless you and we hope you will visit one of our churches soon.
+                    </p>
+                    <div class="mbr-section-btn mt-4">
+                        <button class="btn btn-primary display-4" (click)="openNewsletter()" style="border-radius: 100px;">
+                            @if (newsletterLoading()) {
+                                <fa-icon [icon]="faLoading" animation="spin" />
+                            } @else {
+                                Access This Weeks Newsletter
+                            }
+                        </button>
+                        <button class="btn btn-primary display-4" (click)="openNewsletterArchive()" style="border-radius: 100px;">
+                            Access Our Newsletter Archive
+                        </button>
+                    </div>
+              </div>
+          </div>
+          <div class="col-12 col-md-12 col-lg-6 image-wrapper">
+              <img class="w-100" src="/assets/img/highlight.jpg" alt="Highlight Image">
+          </div>
+      </div>
+  </div>
+</section>
+
+<div class="scroll-container">
+    @for ( url of images; track $index ) {
+        <img [src]="url" (click)="expandImage($index)" class="img-expand">
+    }
+</div>
+
+<app-sunday-masses [massTimes]="[
+    {
+        church: 'Hawick',
+        time: 'Sat 5.00pm (Vigil), St Cuthberts Episcopal Church'
+    },
+    {
+        church: 'Jedburgh',
+        time: 'Sunday 11.30am'
+    },
+    {
+        church: 'Kelso',
+        time: 'Sunday 9.30am'
+    }
+]" />
+
+<google-map height="500px"  width="100%" mapId="41dbf48a8e04a109" [center]="center" [zoom]="zoom">
+  @for (position of markers; track position) {
+      <map-advanced-marker
+          [position]="position"
+      ></map-advanced-marker>
+  }
+</google-map>
+
+<app-priests [priests]="[
+    {
+        name: 'Fr James Cadman',
+        role: 'Parish Administrator',
+        residence: 'Resident in Jedburgh',
+        image: 'priest/priest-1.jpg'
+    },
+    {
+        name: 'Fr Emanuel Francis',
+        role: 'Priest in Residence',
+        residence: 'Resident in Kelso',
+        image: 'priest/priest-2.jpg'
+    }
+]" />
+
+<app-contact
+    id="contact"
+    email="catholic363@gmail.com"
+    phone="01450372681"
+    [address]="['St. Marys & St. Davids, Hawick, TD9 9QZ',
+    'The Immaculate Conception, Jedburgh, TD8 6JX',
+    'St. Marys, Kelso, TD5 0HH']"
+/>
+
+<app-footer />

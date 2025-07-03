@@ -1,0 +1,37 @@
+<div class="container" style="padding-top: 5rem; padding-bottom: 5rem;" id="sunday-mass">
+  <div class="row" style="padding-bottom: 30px;">
+    <h3 class="mbr-section-title mbr-fonts-style align-center mb-0 display-2" style="color: var(--bs-emphasis-color);">
+      <strong>Normal Sunday Mass Times</strong>
+    </h3>
+    <h5 style="text-align: center; margin-top: 20px; font-style: italic; color: var(--bs-emphasis-color);">
+      Times may vary, please see our Newsletter for more information.
+    </h5>
+    <h5 style="text-align: center; margin-top: 20px; font-style: italic; color: var(--bs-emphasis-color);">
+      Confessions are heard 30 minutes before every Mass.
+    </h5>
+    <div class="d-flex justify-content-center mt-2">
+      <div style="max-width: 500px;">
+        <a href="https://universalis.com/mass.htm">
+          <img src="https://universalis.com/banner.gif" alt="Universalis Mass Readings">
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    @for ( time of this.massTimes; track time.church ) {
+      <div class="card col-12 col-md-6 col-lg-4 md-pb">
+        <div class="card-wrapper">
+          <div class="card-box align-left">
+            <div class="iconfont-wrapper" style="margin-bottom: 20px;">
+              <fa-icon class="card-title mb-4" [icon]="faChurch" size="3x" style="color: var(--bs-emphasis-color);" />
+            </div>
+            <h5 class="card-title mbr-fonts-style display-7">
+              <strong>{{time.church}}</strong>
+            </h5>
+            <p class="card-text mbr-fonts-style display-7">{{time.time}}<br></p>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

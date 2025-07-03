@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch Website Development",
+      "type": "chrome",
+      "request": "launch",
+      "preLaunchTask": "Start Fullstack",
+      "url": "http://localhost:4200/#",
+      "webRoot": "${workspaceFolder}/client"
+    }
+  ]
+}

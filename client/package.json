@@ -1,0 +1,45 @@
+{
+  "name": "borders-catholic",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "prestart": "npm i",
+    "start": "ng serve",
+    "build": "ng build",
+    "build:prod": "ng build --configuration production",
+    "lint": "npx --yes eslint",
+    "lint:fix": "npx --yes eslint --fix",
+    "tsc-verify": "npx --yes tsc --noEmit"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^20.0.6",
+    "@angular/common": "^20.0.6",
+    "@angular/compiler": "^20.0.6",
+    "@angular/core": "^20.0.6",
+    "@angular/forms": "^20.0.6",
+    "@angular/google-maps": "^20.0.5",
+    "@angular/platform-browser": "^20.0.6",
+    "@angular/platform-browser-dynamic": "^20.0.6",
+    "@angular/platform-server": "^20.0.6",
+    "@angular/router": "^20.0.6",
+    "@fortawesome/angular-fontawesome": "^2.0.1",
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-brands-svg-icons": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@ng-bootstrap/ng-bootstrap": "^19.0.1",
+    "bootstrap": "^5.3.7",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.8.1"
+  },
+  "devDependencies": {
+    "@angular/build": "^20.0.5",
+    "@angular/cli": "^20.0.5",
+    "@angular/compiler-cli": "^20.0.6",
+    "@stylistic/eslint-plugin": "^5.1.0",
+    "@types/node": "^24.0.10",
+    "angular-eslint": "^20.1.1",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.35.1"
+  }
+}

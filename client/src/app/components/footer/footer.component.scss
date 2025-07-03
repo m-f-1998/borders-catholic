@@ -1,0 +1,42 @@
+.soc-item {
+	width: 40px;
+	height: 40px;
+	border-radius: 6px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: all 0.3s;
+	margin: 0 5px;
+	background: #3399ff;
+}
+
+.footer {
+  background-color: var(--background-color);
+  font-size: 14px;
+  text-align: center;
+  padding: 15px 0;
+  position: relative;
+}
+
+.footer h3 {
+  font-size: 36px;
+  font-weight: 700;
+  position: relative;
+  padding: 0;
+  margin: 0 0 15px 0;
+}
+
+.footer p {
+  font-size: 15;
+  font-style: italic;
+  padding: 0;
+  margin: 0 0 30px 0;
+}
+
+.footer .copyright {
+  border-top: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+}
+
+.footer .credits {
+  font-size: 13px;
+}

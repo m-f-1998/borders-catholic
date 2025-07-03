@@ -1,0 +1,33 @@
+<nav class="navbar navbar-expand-sm" style="background-color: #3399ff; height: 100%;" >
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav" style="margin: 5px; transition: none 0s ease 0s !important;">
+      <ul class="navbar-nav">
+        <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+          <a class="nav-link link show text-white display-4" [routerLink]="'/' + this.churchName" [style.font-weight]="this.currentPage == '' ? 'bold' : ''">
+              Home
+          </a>
+        </li>
+        <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+          <a class="nav-link link show text-white display-4" [routerLink]="'sacraments'" [style.font-weight]="this.currentPage == 'sacraments' ? 'bold' : ''">
+              Sacraments
+          </a>
+        </li>
+        @if ( currentPage === "" ) {
+          <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+            <a class="nav-link link text-white display-4" (click)="scrollTo('sunday-mass')">
+                Mass Times
+            </a>
+          </li>
+        }
+        <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+          <a class="nav-link link text-white display-4" (click)="scrollTo('contact')">
+            Contacts
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
