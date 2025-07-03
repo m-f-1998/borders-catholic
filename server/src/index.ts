@@ -1,5 +1,4 @@
 import express from "express"
-import type { Response } from "express"
 import helmet from "helmet"
 
 import cors from "cors"
@@ -16,7 +15,7 @@ app.use ( express.json ( { limit: "1mb" } ) )
 app.use ( express.urlencoded ( { limit: "1mb", extended: true } ) )
 
 app.use ( cors ( {
-  origin: [ "http://localhost:4200", "https://borderscatholic.co.uk" ],
+  origin: [ "http://localhost:3000", "https://borderscatholic.co.uk" ],
   methods: [ "GET", "POST" ],
   allowedHeaders: [ "Content-Type", "Authorization" ],
   credentials: true
@@ -49,21 +48,33 @@ app.use ( helmet ( {
       ],
       styleSrc: [
         "'self'",
-        ( _req, res ) => `'nonce-${( res as Response ).locals[ "cspNonce" ]}'`,
+        "'unsafe-inline'",
+        "https://cdn.jsdelivr.net",
+        "https://fonts.googleapis.com",
+        // ( _req, res ) => `'nonce-${( res as Response ).locals[ "cspNonce" ]}'`,
       ],
       scriptSrcElem: [
         "'self'",
-        ( _req, res ) => `'nonce-${( res as Response ).locals[ "cspNonce" ]}'`
+        "'unsafe-inline'",
+        // ( _req, res ) => `'nonce-${( res as Response ).locals[ "cspNonce" ]}'`,
+        "https://www.googletagmanager.com",
+        "https://maps.googleapis.com",
+        "https://unpkg.com"
       ],
       imgSrc: [
         "'self'",
         "data:",
         "https://\*.jsdelivr.net",
+        "https://universalis.com",
+        "https://maps.googleapis.com",
+        "https://maps.gstatic.com",
       ],
       connectSrc: [
         "'self'",
+        "https://www.googleapis.com",
         "https://\*.google-analytics.com",
         "https://\*.google.com",
+        "https://maps.googleapis.com",
       ],
       frameSrc: [
         "'self'",

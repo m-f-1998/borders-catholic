@@ -1,4 +1,4 @@
-# borderscatholic.co.uk.co.uk 🌐
+# borderscatholic.co.uk 🌐
 Website design for [Ss Mary and David's Catholic Parish](https://borderscatholic.co.uk) — built using Angular and Node.js, containerized with Docker.
 
 ## 🌱 Features
