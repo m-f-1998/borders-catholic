@@ -20,3 +20,16 @@ Images are published to:
 ./dev.sh # Docker Compose Local Development Server on Port 3000
 ./deploy.sh ${dev|latest} # Deploy Package (Requires GHCR Access Token)
 ```
+
+## 🔧 Required Environment Variables
+
+The backend server requires the following environment variables to function properly:
+
+| Variable              | Description                         |
+|-----------------------|-------------------------------------|
+| `GOOGLE_MAPS_KEY` | Your Google Maps secret key for displaying locations |
+
+## 📁 Example `.env` (for local dev)
+
+```env
+GOOGLE_MAPS_KEY=your-secret-key

@@ -1,4 +1,5 @@
 import express from "express"
+import type { Response } from "express"
 import helmet from "helmet"
 
 import cors from "cors"
@@ -55,8 +56,7 @@ app.use ( helmet ( {
       ],
       scriptSrcElem: [
         "'self'",
-        "'unsafe-inline'",
-        // ( _req, res ) => `'nonce-${( res as Response ).locals[ "cspNonce" ]}'`,
+        ( _req, res ) => `'nonce-${( res as Response ).locals[ "cspNonce" ]}'`,
         "https://www.googletagmanager.com",
         "https://maps.googleapis.com",
         "https://unpkg.com"
@@ -64,6 +64,7 @@ app.use ( helmet ( {
       imgSrc: [
         "'self'",
         "data:",
+        "https://www.googletagmanager.com",
         "https://\*.jsdelivr.net",
         "https://universalis.com",
         "https://maps.googleapis.com",

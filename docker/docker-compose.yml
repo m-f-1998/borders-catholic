@@ -7,3 +7,4 @@ services:
     ports:
       - "3000:3000"
     container_name: borders-catholic
+    # Environment variables required in Override file
