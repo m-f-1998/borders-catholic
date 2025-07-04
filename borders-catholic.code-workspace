@@ -5,6 +5,13 @@
 		}
 	],
 	"settings": {
+		"search.exclude": {
+			"**/dist": true,
+			"**/vendor": true,
+			"**/node_modules": true,
+			"**/bower_components": true,
+			"**/*.code-search": true
+		},
 		"editor.formatOnSave": true,
 		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
 	}

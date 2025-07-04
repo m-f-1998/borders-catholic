@@ -74,7 +74,7 @@ const injectScripts = ( html: string, nonce: string, url: string ): string => {
 }
 
 const injectGoogleTagManager = ( html: string, nonce: string ): string => {
-  const gtmScript = `<script nonce="${nonce}" async src="https://www.googletagmanager.com/gtag/js?id=G-BKXJTC9XPM"></script>
+  const gtmScript = `<script nonce="${nonce}" async src="https://www.googletagmanager.com/gtag/js?id=G-8BJ3R2M3MR"></script>
     <script nonce="${nonce}">
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
