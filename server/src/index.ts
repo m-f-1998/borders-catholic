@@ -4,6 +4,8 @@ import helmet from "helmet"
 
 import cors from "cors"
 import { router as staticRouter } from "./routes/static.js"
+import { router as driveRouter } from "./routes/drive.js"
+
 import { randomBytes } from "crypto"
 import { rateLimit } from "express-rate-limit"
 
@@ -37,6 +39,9 @@ app.use ( helmet ( {
     maxAge: 31536000,
     includeSubDomains: true,
     preload: true
+  },
+  referrerPolicy: {
+    policy: "strict-origin-when-cross-origin"
   },
   contentSecurityPolicy: {
     directives: {
@@ -96,6 +101,7 @@ app.use ( "/assets", rateLimit ( {
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 } ) )
 
+app.use ( driveRouter )
 app.use ( staticRouter )
 
 app.listen ( 3000, ( ) => {

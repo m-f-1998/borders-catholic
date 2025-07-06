@@ -9,8 +9,8 @@ import { HeaderComponent } from "@components/header/header.component"
 import { PriestsComponent } from "@components/priests/priests.component"
 import { ContactComponent } from "@components/contact/contact.component"
 import { FooterComponent } from "@components/footer/footer.component"
-import { HttpClient } from "@angular/common/http"
 import { faFacebookF, faInstagram, faYoutube } from "@fortawesome/free-brands-svg-icons"
+import { ApiService } from "../services/api.service"
 
 @Component ( {
   selector: "app-hawick-home",
@@ -47,21 +47,17 @@ export class HomeComponent {
   ]
 
   public zoom = 10
+  public loading = signal ( false )
+
   public faChurch = faChurch
   public faLoading = faSpinner
-  public newsletterLoading = signal ( false )
-
   public faFacebook = faFacebookF
   public faYoutube = faYoutube
   public faEnvelope = faEnvelope
   public faInstagram = faInstagram
 
-  private debounceTimeout: NodeJS.Timeout | undefined
-  private lastCalled = 0
-  private rateLimit = 5000
-
   private readonly modalSvc: NgbModal = inject ( NgbModal )
-  private readonly httpClient: HttpClient = inject ( HttpClient )
+  private readonly apiSvc: ApiService = inject ( ApiService )
 
   public expandImage ( index: number ) {
     const reference = this.modalSvc.open ( ExpandedImageComponent, { size: "lg", centered: true } )
@@ -69,106 +65,32 @@ export class HomeComponent {
     reference.componentInstance.index = index
   }
 
-  public getFolder ( ) {
-    return new Promise<string> ( resolve => {
-      if ( Date.now ( ) - this.lastCalled >= this.rateLimit ) {
-        this.lastCalled = Date.now ( )
-        this.debounce ( async ( ) => {
-          let skip = false
-          if ( !localStorage.getItem ( "year" ) || !localStorage.getItem ( "month" ) ) {
-            skip = true
-          }
-
-          const date: string = this.getPreviousSunday ( )
-          const sunday = new Date ( date )
-
-          let yearID = localStorage.getItem ( "newsletters_year" )
-          const yearChange = !skip && localStorage.getItem ( "year" ) !== sunday.getFullYear ( ).toString ( )
-
-          if ( skip || !yearID || yearChange ) {
-            yearID = await this.getID ( "1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG", sunday.getFullYear ( ).toString ( ) )
-            localStorage.setItem ( "newsletters_year", yearID as string )
-            localStorage.setItem ( "year", sunday.getFullYear ( ).toString ( ) )
-          }
-
-          let monthID = localStorage.getItem ( "newsletters_month" )
-          const monthChange = !skip && localStorage.getItem ( "month" ) !== sunday.toLocaleString ( "default", { month: "long" } )
-
-          if ( skip || !monthID || monthChange ) {
-            const monthNum2Dig = ( num: number ) => num < 10 ? `0${num}` : num
-            const monthName = sunday.toLocaleString ( "default", { month: "long" } )
-            const folderName = `${monthNum2Dig ( sunday.getMonth () + 1 )} - ${monthName}`
-            monthID = await this.getID ( yearID, folderName )
-            localStorage.setItem ( "newsletters_month", monthID as string )
-            localStorage.setItem ( "month", monthName )
-          }
-
-          const files = await this.getFiles ( monthID )
-          const pdf = files.find ( ( x: any ) => x.name === date + ".pdf" )
-
-          if ( pdf ) {
-            resolve ( `https://drive.google.com/file/d/${pdf.id}/view` )
-          } else {
-            resolve ( "https://drive.google.com/drive/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG" )
-          }
-        }, 100 )
-      } else {
-        resolve ( "https://drive.google.com/drive/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG" )
-      }
-    } )
-  }
-
-  public openNewsletter ( ) {
-    this.newsletterLoading.set ( true )
-    this.getFolder ( ).then ( ( url: string ) => {
-      window.location.href = url
-    } ).catch ( e => {
+  public async openNewsletter ( ) {
+    this.loading.set ( true )
+    try {
+      await this.getNewsletterLink ( )
+    } catch ( e ) {
       console.error ( e )
-    } ).finally ( ( ) => {
-      this.newsletterLoading.set ( false )
-    } )
+    } finally {
+      this.loading.set ( false )
+    }
   }
 
   public openNewsletterArchive ( ) {
-    window.location.href = "https://drive.google.com/drive/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG"
+    // window.location.href = "https://drive.google.com/drive/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG"
   }
 
-  private getID ( id: string, folderName: string ) {
-    return new Promise<string> ( resolve => {
-      this.httpClient.get ( `https://www.googleapis.com/drive/v3/files?key=AIzaSyALY_aYqEMGP6CChumMDc9sLJ1X8e4q6Dg&q=%27${id}%27%20in%20parents` ).subscribe ( ( response: any ) => {
-        resolve ( response.files.find ( ( x: any ) => x.name === folderName ).id )
-      } )
-    } )
-  }
-
-  private getFiles ( id: string ): any {
-    return new Promise<string> ( resolve => {
-      this.httpClient.get ( `https://www.googleapis.com/drive/v3/files?key=AIzaSyALY_aYqEMGP6CChumMDc9sLJ1X8e4q6Dg&q=%27${id}%27%20in%20parents` ).subscribe ( ( response: any ) => {
-        resolve ( response.files )
-      } )
-    } )
-  }
-
-  private getPreviousSunday ( ) {
-    const today = new Date ( )
-    const daysSinceSunday = today.getDay ( )
-
-    const previousSunday = new Date ( today )
-
-    if ( today.getDay ( ) === 6 ) {
-      previousSunday.setDate ( today.getDate ( ) + 1 )
-    } else {
-      previousSunday.setDate ( today.getDate ( ) - daysSinceSunday )
+  private async getNewsletterLink ( ) {
+    try {
+      const response: any = await this.apiSvc.get ( "/api/newsletter" )
+      if ( response.url ) {
+        window.location.href = response.url
+      } else {
+        this.openNewsletterArchive ( )
+      }
+    } catch ( error ) {
+      console.error ( "Error fetching newsletter link:", error )
+      this.openNewsletterArchive ( )
     }
-    const year = previousSunday.getFullYear ( )
-    const month = String ( previousSunday.getMonth ( ) + 1 ).padStart ( 2, "0" )
-    const day = String ( previousSunday.getDate ( ) ).padStart ( 2, "0" )
-
-    return `${year}-${month}-${day}`
-  }
-
-  private debounce = ( func: any, delay: any ) => {
-    clearTimeout ( this.debounceTimeout )
-    this.debounceTimeout = setTimeout ( func, delay )
   }
 }

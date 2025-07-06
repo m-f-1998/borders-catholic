@@ -27,9 +27,9 @@ The backend server requires the following environment variables to function prop
 
 | Variable              | Description                         |
 |-----------------------|-------------------------------------|
-| `GOOGLE_MAPS_KEY` | Your Google Maps secret key for displaying locations |
+| `GOOGLE_KEY` | Your Google Maps secret key for displaying locations |
 
 ## 📁 Example `.env` (for local dev)
 
 ```env
-GOOGLE_MAPS_KEY=your-secret-key
+GOOGLE_KEY=your-secret-key
