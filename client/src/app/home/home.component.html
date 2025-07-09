@@ -15,10 +15,10 @@
                     <h3 class="mbr-text mbr-fonts-style mb-3 align-left display-7">Hawick; Jedburgh; Kelso</h3>
                     <div class="social-list mb-3">
                         <a href="https://www.facebook.com/profile.php?id=100079676379609" target="_blank" class="soc-item btn-primary">
-                            <fa-icon [icon]="faFacebook" class="text-light" />
+                            <fa-icon [icon]="iconSvc.getIcon('fab', 'facebook')" class="text-light" />
                         </a>
                         <a href="mailto:catholic363@gmail.com" target="_blank" class="soc-item btn-primary">
-                            <fa-icon [icon]="faEnvelope" class="text-light" />
+                            <fa-icon [icon]="iconSvc.getIcon('fas', 'envelope')" class="text-light" />
                         </a>
                     </div>
                     <p class="mbr-text mbr-fonts-style align-left display-7">
@@ -28,7 +28,7 @@
                     <div class="mbr-section-btn mt-4">
                         <button class="btn btn-primary display-4" (click)="openNewsletter()" style="border-radius: 100px;">
                             @if (loading()) {
-                                <fa-icon [icon]="faLoading" animation="spin" />
+                                <fa-icon [icon]="iconSvc.getIcon('fas', 'spinner')" animation="spin" />
                             } @else {
                                 Access This Weeks Newsletter
                             }

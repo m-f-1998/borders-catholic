@@ -13,7 +13,7 @@
         <p>{{description}}</p>
         <div class="d-flex justify-content-center gap-2">
           <a href="/" class="btn btn-lg btn-icon" rel="tooltip" title="Home" style="background-color: gray;">
-            <fa-icon [icon]="faHome" size="lg" />
+            <fa-icon [icon]="iconSvc.getIcon('fas', 'home')" size="lg" />
           </a>
           @for (link of socialLinks; track $index) {
             <a [href]="link.url" target="_blank" [class]="link.class" rel="tooltip" [title]="link.tooltip">

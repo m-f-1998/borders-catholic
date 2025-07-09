@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core"
 import { ActivatedRoute, Router } from "@angular/router"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome"
-import { faHome } from "@fortawesome/free-solid-svg-icons"
+import { IconService } from "@services/icons.service"
 
 @Component ( {
   selector: "app-error",
@@ -13,10 +13,8 @@ import { faHome } from "@fortawesome/free-solid-svg-icons"
   changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class ErrorComponent {
-
   public error = "500 Internal Server Error"
   public description = "Something went wrong."
-  public faHome = faHome
 
   public socialLinks = [
     {
@@ -27,6 +25,7 @@ export class ErrorComponent {
     },
   ]
 
+  public readonly iconSvc: IconService = inject ( IconService )
   private readonly route: ActivatedRoute = inject ( ActivatedRoute )
   private readonly router: Router = inject ( Router )
 

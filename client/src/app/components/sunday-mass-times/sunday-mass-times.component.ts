@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core"
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome"
-import { faChurch } from "@fortawesome/free-solid-svg-icons"
+import { IconService } from "@services/icons.service"
 
 @Component ( {
   selector: "app-sunday-masses",
@@ -16,5 +16,6 @@ export class SundayMassTimesComponent {
     church: string
     time: string
   }> = [ ]
-  public faChurch = faChurch
+
+  public readonly iconSvc: IconService = inject ( IconService )
 }

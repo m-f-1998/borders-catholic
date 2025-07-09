@@ -12,7 +12,7 @@ export class ExpandedImageComponent {
   @Input ( ) public imageURLs: string [ ] = [ ]
   @Input ( ) public index: number = 0
 
-  public activeRouter: NgbActiveModal = inject ( NgbActiveModal )
+  public readonly activeRouter: NgbActiveModal = inject ( NgbActiveModal )
 
   public close ( ) {
     this.activeRouter.dismiss ( )

@@ -1,7 +1,7 @@
 
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core"
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome"
-import { faEnvelope, faEnvelopeOpen, faGlobe, faMapPin, faMobileAlt, faPhone } from "@fortawesome/free-solid-svg-icons"
+import { IconService } from "@services/icons.service"
 
 @Component ( {
   selector: "app-contact",
@@ -15,12 +15,7 @@ import { faEnvelope, faEnvelopeOpen, faGlobe, faMapPin, faMobileAlt, faPhone } f
 export class ContactComponent {
   @Input ( ) public email: string = ""
   @Input ( ) public phone: string = ""
-  @Input ( ) public address: string[] = []
+  @Input ( ) public address: string [ ] = [ ]
 
-  public faPhone = faPhone
-  public faMobile = faMobileAlt
-  public faEnvelope = faEnvelope
-  public faEnvelopeOpen = faEnvelopeOpen
-  public faGlobe = faGlobe
-  public faMapPin = faMapPin
+  public readonly iconSvc: IconService = inject ( IconService )
 }

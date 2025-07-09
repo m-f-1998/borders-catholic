@@ -12,5 +12,5 @@ import { Router, RouterModule, RouterOutlet } from "@angular/router"
   changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class AppComponent {
-  public router: Router = inject ( Router )
+  public readonly router: Router = inject ( Router )
 }

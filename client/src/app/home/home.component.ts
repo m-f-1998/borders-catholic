@@ -2,15 +2,14 @@ import { ChangeDetectionStrategy, Component, inject, signal } from "@angular/cor
 import { GoogleMapsModule } from "@angular/google-maps"
 import { NgbModal, NgbModalModule } from "@ng-bootstrap/ng-bootstrap"
 import { ExpandedImageComponent } from "@components/expanded-image/expanded-image.component"
-import { faChurch, faEnvelope, faSpinner } from "@fortawesome/free-solid-svg-icons"
 import { FaIconComponent } from "@fortawesome/angular-fontawesome"
 import { SundayMassTimesComponent } from "@components/sunday-mass-times/sunday-mass-times.component"
 import { HeaderComponent } from "@components/header/header.component"
 import { PriestsComponent } from "@components/priests/priests.component"
 import { ContactComponent } from "@components/contact/contact.component"
 import { FooterComponent } from "@components/footer/footer.component"
-import { faFacebookF, faInstagram, faYoutube } from "@fortawesome/free-brands-svg-icons"
-import { ApiService } from "../services/api.service"
+import { ApiService } from "@services/api.service"
+import { IconService } from "@services/icons.service"
 
 @Component ( {
   selector: "app-hawick-home",
@@ -49,13 +48,7 @@ export class HomeComponent {
   public zoom = 10
   public loading = signal ( false )
 
-  public faChurch = faChurch
-  public faLoading = faSpinner
-  public faFacebook = faFacebookF
-  public faYoutube = faYoutube
-  public faEnvelope = faEnvelope
-  public faInstagram = faInstagram
-
+  public readonly iconSvc: IconService = inject ( IconService )
   private readonly modalSvc: NgbModal = inject ( NgbModal )
   private readonly apiSvc: ApiService = inject ( ApiService )
 
@@ -77,7 +70,7 @@ export class HomeComponent {
   }
 
   public openNewsletterArchive ( ) {
-    // window.location.href = "https://drive.google.com/drive/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG"
+    window.location.href = "https://drive.google.com/drive/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG"
   }
 
   private async getNewsletterLink ( ) {

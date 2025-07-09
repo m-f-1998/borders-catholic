@@ -1,8 +1,7 @@
 
-import { ChangeDetectionStrategy, Component } from "@angular/core"
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome"
-import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons"
-import { faEnvelope, faGlobe } from "@fortawesome/free-solid-svg-icons"
+import { IconService } from "@services/icons.service"
 
 @Component ( {
   selector: "app-footer",
@@ -14,13 +13,9 @@ import { faEnvelope, faGlobe } from "@fortawesome/free-solid-svg-icons"
   changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class FooterComponent {
-
   public currentDate = new Date ( )
 
-  public faGithub: any = faGithub
-  public faLinkedin: any = faLinkedin
-  public faEmail: any = faEnvelope
-  public faWebsite: any = faGlobe
+  public readonly iconSvc: IconService = inject ( IconService )
 
   public copyrightNotice ( ) {
     const year = new Date ( ).getFullYear ( )
@@ -30,5 +25,4 @@ export class FooterComponent {
   public goToAuthor ( ) {
     window.location.href = "https://matthewfrankland.co.uk"
   }
-
 }

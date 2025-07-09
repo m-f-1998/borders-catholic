@@ -19,7 +19,7 @@ export class HeaderComponent {
 
   public isNavbarCollapsed = true
 
-  public router: Router = inject ( Router )
+  public readonly router: Router = inject ( Router )
 
   public scrollTo ( id: string ) {
     const element = document.getElementById ( id )

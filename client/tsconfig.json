@@ -2,10 +2,14 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "./src",
     "paths": {
       "@components/*": [
-        "./src/app/components/*"
-      ]
+        "app/components/*"
+      ],
+      "@services/*": [
+        "app/services/*"
+      ],
     },
     "outDir": "./dist/out-tsc",
     "strict": true,
