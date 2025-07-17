@@ -16,20 +16,20 @@
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
-    "dotenv": "^17.0.1",
-    "eslint": "^9.30.1",
+    "dotenv": "^17.2.0",
+    "eslint": "^9.31.0",
     "express": "^5.1.0",
     "express-rate-limit": "^7.5.1",
-    "googleapis": "^150.0.1",
+    "googleapis": "^152.0.0",
     "helmet": "^8.1.0",
     "typescript": "^5.8.3"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^5.1.0",
+    "@stylistic/eslint-plugin": "^5.2.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/helmet": "^0.0.48",
     "eslint-plugin-import": "^2.32.0",
-    "typescript-eslint": "^8.35.1"
+    "typescript-eslint": "^8.37.0"
   }
 }

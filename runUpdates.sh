@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 echo "🔄 Updating client packages..."
 cd client
 npm update --save
@@ -19,4 +17,5 @@ if [ -n "$(npm outdated)" ]; then
   npm outdated
 fi
 
+echo ""
 read -p "Press any key to exit..." -n1 -s
