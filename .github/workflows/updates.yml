@@ -1,0 +1,42 @@
+name: NPM Minor Updates
+
+on:
+  schedule:
+    - cron: '30 2 * * *'  # Daily at 02:30 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write  # Need write to push commits
+
+jobs:
+  npm-update:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        project: [client, server]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false  # Use token explicitly for push
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ${{ matrix.project }}
+
+      - name: Run update script
+        run: ./runUpdates.sh
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json
+          git diff --cached --quiet || git commit -m "chore: automated minor npm updates"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main
