@@ -27,4 +27,6 @@ else
 fi
 
 echo ""
-read -p "Press any key to exit..." -n1 -s
+if [ -t 0 ]; then
+  read -p "Press any key to exit..." -n1 -s
+fi
