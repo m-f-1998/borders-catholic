@@ -138,7 +138,7 @@ export default tseslint.config(
         "double",
         {
           avoidEscape: true,
-          allowTemplateLiterals: true,
+          allowTemplateLiterals: "always",
         },
       ],
       "@stylistic/indent": [
