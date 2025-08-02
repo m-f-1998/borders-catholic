@@ -25,6 +25,9 @@ export class IconService {
     if ( definition ) {
       return { prefix, iconName: name }
     }
-    return faWarning
+    return {
+      prefix: "fas",
+      iconName: "warning"
+    }
   }
 }
