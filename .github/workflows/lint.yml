@@ -24,7 +24,7 @@ jobs:
           node-version: 'lts/*'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm i
         working-directory: ${{ matrix.project }}
 
       - name: Run lint
