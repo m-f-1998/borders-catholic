@@ -26,7 +26,7 @@ export class ExpandedImageComponent {
 
   public prevImage ( ) {
     if ( this.index === 0 ) {
-      this.index = this.imageURLs.length
+      this.index = this.imageURLs.length - 1
     } else this.index--
   }
 
