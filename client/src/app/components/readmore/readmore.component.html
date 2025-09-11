@@ -1,27 +1,27 @@
 <div class="col-12 col-lg col-md-12 my-auto mt-4">
   <div class="text-wrapper md-pb">
-    @if ( subtitle ) {
-      <h3 style="color: var(--bs-emphasis-color); font-style: italic;">{{subtitle}}</h3>
+    @if ( subtitle() ) {
+      <h3 style="color: var(--bs-emphasis-color); font-style: italic;">{{subtitle()}}</h3>
     }
     <p class="mbr-text mbr-fonts-style align-left display-7" style="color: var(--bs-emphasis-color); white-space: pre-line;">
-      @if ( content.length > this.MAXLENGTH && this.showReadMore ) {
+      @if ( content().length > this.MAXLENGTH && this.showReadMore() ) {
         <span>
-          @if ( expanded ) {
-            {{this.content}}
+          @if ( expanded() ) {
+            {{this.content()}}
           } @else {
             {{this.getCutString ( )}}
           }
         </span>
         <button style="color: #3399FF" class="mbr-section-subtitle mbr-fonts-style mb-2 align-left display-7" (click)="expand ( )">
-          {{expanded ? 'Collapse' : 'Expand'}}
+          {{expanded() ? 'Collapse' : 'Expand'}}
         </button>
       } @else {
-        {{content}}
+        {{content()}}
       }
     </p>
-    @if ( fileName && fileURL ) {
+    @if ( fileName() && fileURL() ) {
       <div class="mbr-section-btn mb-4">
-        <a class="btn btn-primary display-4" [href]="fileURL">{{fileName}}</a>
+        <a class="btn btn-primary display-4" [href]="fileURL()">{{fileName()}}</a>
       </div>
     }
 </div>

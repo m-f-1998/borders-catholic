@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core"
+import { ChangeDetectionStrategy, Component, input, InputSignal } from "@angular/core"
 
 @Component ( {
   selector: "app-priests",
@@ -9,12 +9,17 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core"
   changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class PriestsComponent {
-  @Input ( ) public priests: Array<
+  public priests: InputSignal<Array<
     {
       name: string
       image: string
       role: string
       residence: string
     }
-  > = [ ]
+  >> = input<Array<{
+    name: string
+    image: string
+    role: string
+    residence: string
+  }>> ( [ ] )
 }

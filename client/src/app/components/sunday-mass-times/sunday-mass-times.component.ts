@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core"
+import { ChangeDetectionStrategy, Component, inject, input, InputSignal } from "@angular/core"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome"
 import { IconService } from "@services/icons.service"
 
@@ -12,10 +12,10 @@ import { IconService } from "@services/icons.service"
   changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class SundayMassTimesComponent {
-  @Input ( ) public massTimes: Array<{
+  public massTimes: InputSignal<Array<{
     church: string
     time: string
-  }> = [ ]
+  }>> = input<Array<{ church: string; time: string }>> ( [ ] )
 
   public readonly iconSvc: IconService = inject ( IconService )
 }

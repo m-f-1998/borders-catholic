@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core"
+import { ChangeDetectionStrategy, Component, inject, input, InputSignal } from "@angular/core"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome"
 import { IconService } from "@services/icons.service"
 
@@ -13,9 +13,9 @@ import { IconService } from "@services/icons.service"
   changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class ContactComponent {
-  @Input ( ) public email: string = ""
-  @Input ( ) public phone: string = ""
-  @Input ( ) public address: string [ ] = [ ]
+  public email: InputSignal<string> = input<string> ( "" )
+  public phone: InputSignal<string> = input<string> ( "" )
+  public address: InputSignal<string [ ]> = input<string [ ]> ( [ ] )
 
   public readonly iconSvc: IconService = inject ( IconService )
 }

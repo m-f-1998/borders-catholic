@@ -1,7 +1,7 @@
 <div id="priests">
   <div class="container">
     <div class="row justify-content-center">
-      @for ( priest of priests; track priest.name ) {
+      @for ( priest of priests(); track priest.name ) {
         <div class="col-sm-6 col-lg-6">
           <div class="card-wrap">
             <div class="image-wrap">

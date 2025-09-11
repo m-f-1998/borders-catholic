@@ -8,7 +8,6 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap"
   changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class ExpandedImageComponent {
-
   @Input ( ) public imageURLs: string [ ] = [ ]
   @Input ( ) public index: number = 0
 

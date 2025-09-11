@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core"
+import { ChangeDetectionStrategy, Component, inject, input, InputSignal } from "@angular/core"
 import { Router, RouterModule } from "@angular/router"
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap"
 
@@ -14,8 +14,8 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap"
   changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class HeaderComponent {
-  @Input ( ) public currentPage: string = ""
-  @Input ( ) public churchName: string = ""
+  public currentPage: InputSignal<string> = input<string> ( "" )
+  public churchName: InputSignal<string> = input<string> ( "" )
 
   public isNavbarCollapsed = true
 

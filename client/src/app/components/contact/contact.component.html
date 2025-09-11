@@ -11,7 +11,7 @@
                         <h5 class="card-title mbr-fonts-style display-7">
                           <strong>Phone</strong>
                         </h5>
-                        <a style="color: var(--bs-emphasis-color);" href="tel:{{this.phone}}">{{this.phone}}</a>
+                        <a style="color: var(--bs-emphasis-color);" href="tel:{{this.phone()}}">{{this.phone()}}</a>
                     </div>
                 </div>
             </div>
@@ -25,7 +25,7 @@
                         <h5 class="card-title mbr-fonts-style display-7">
                           <strong>Email</strong>
                         </h5>
-                        <a style="color: var(--bs-emphasis-color);" href="mailto:{{this.email}}">{{this.email}}</a>
+                        <a style="color: var(--bs-emphasis-color);" href="mailto:{{this.email()}}">{{this.email()}}</a>
                     </div>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                         <h5 class="card-title mbr-fonts-style display-7">
                           <strong>Address</strong>
                         </h5>
-                        @for ( address of this.address; track address ) {
+                        @for ( address of this.address(); track address ) {
                             <p class="card-text mbr-fonts-style display-4">{{address}}</p>
                         }
                     </div>
