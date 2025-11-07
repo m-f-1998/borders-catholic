@@ -1,0 +1,67 @@
+name: Weekly Repo Backup
+
+on:
+  schedule:
+    - cron: "0 0 * * 0" # Every Sunday at 00:00 UTC
+  workflow_dispatch: # allow manual runs
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history (includes .git)
+
+      - name: Create backup archive
+        run: |
+          # derive repo name (strip owner/)
+          REPO_NAME="borders-catholic"
+          DATE_STR=$(date -u +'%Y-%m-%d_%H-%M-%SZ')
+          FILENAME="${REPO_NAME}_${DATE_STR}.tar"
+
+          # Step 1: Create archive of repo contents
+          git archive --format=tar HEAD -o "$FILENAME"
+
+          # Step 2: Append .git folder (full history) - optional
+          tar --append --file="$FILENAME" .git
+
+          # Step 3: Compress final archive
+          gzip "$FILENAME"
+
+          # Result: borders-catholic_2025-10-02_20-40-21Z.tar.gz
+          # Update ARCHIVE and REPO_FOLDER environment variables for next steps
+          ARCHIVE="${FILENAME}.gz"
+          echo "ARCHIVE=$ARCHIVE" >> $GITHUB_ENV
+          echo "REPO_FOLDER=$REPO_NAME" >> $GITHUB_ENV
+
+      - name: Install AWS CLI
+        run: |
+          python -m pip install --upgrade pip
+          pip install awscli --upgrade --user
+          export PATH="$HOME/.local/bin:$PATH"
+          aws --version
+
+      - name: Upload to Cloudflare R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          BUCKET: github-backups
+          ARCHIVE: ${{ env.ARCHIVE }}
+          REPO_FOLDER: ${{ env.REPO_FOLDER }}
+        run: |
+          ENDPOINT="https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com"
+          echo "Uploading $ARCHIVE -> s3://${BUCKET}/${ARCHIVE} to Cloudflare R2..."
+          aws --endpoint-url "$ENDPOINT" s3 cp "$ARCHIVE" "s3://${BUCKET}/${ARCHIVE}"
+          echo "Upload finished."
+
+      - name: Cleanup local archive
+        if: always()
+        run: rm -f "$ARCHIVE" || true
