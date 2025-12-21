@@ -1,4 +1,10 @@
 {
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "vsicons.presets.angular": true,
+  "chat.mcp.serverSampling": {
+    "my-website/.vscode/mcp.json: angular-cli": {
+      "allowedDuringChat": true
+    }
+  }
 }
