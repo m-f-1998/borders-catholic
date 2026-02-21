@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject, input, InputSignal } from "@angular/core"
-import { FontAwesomeModule } from "@fortawesome/angular-fontawesome"
-import { IconService } from "@services/icons.service"
+import { ChangeDetectionStrategy, Component, input, InputSignal } from "@angular/core"
+import { IconComponent } from "app/icon/icon.component"
 
 @Component ( {
   selector: "app-sunday-masses",
   imports: [
-    FontAwesomeModule
+    IconComponent
   ],
   templateUrl: "./sunday-mass-times.component.html",
   styleUrl: "./sunday-mass-times.component.scss",
@@ -16,6 +15,4 @@ export class SundayMassTimesComponent {
     church: string
     time: string
   }>> = input<Array<{ church: string; time: string }>> ( [ ] )
-
-  public readonly iconSvc: IconService = inject ( IconService )
 }

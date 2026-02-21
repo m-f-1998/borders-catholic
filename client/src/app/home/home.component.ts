@@ -1,15 +1,15 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from "@angular/core"
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal, WritableSignal } from "@angular/core"
 import { GoogleMapsModule } from "@angular/google-maps"
 import { NgbModal, NgbModalModule } from "@ng-bootstrap/ng-bootstrap"
 import { ExpandedImageComponent } from "@components/expanded-image/expanded-image.component"
-import { FaIconComponent } from "@fortawesome/angular-fontawesome"
 import { SundayMassTimesComponent } from "@components/sunday-mass-times/sunday-mass-times.component"
 import { HeaderComponent } from "@components/header/header.component"
 import { PriestsComponent } from "@components/priests/priests.component"
 import { ContactComponent } from "@components/contact/contact.component"
 import { FooterComponent } from "@components/footer/footer.component"
 import { ApiService } from "@services/api.service"
-import { IconService } from "@services/icons.service"
+import { IconComponent } from "app/icon/icon.component"
+import { MapsService } from "@services/maps.service"
 
 @Component ( {
   selector: "app-hawick-home",
@@ -21,13 +21,13 @@ import { IconService } from "@services/icons.service"
     PriestsComponent,
     ContactComponent,
     FooterComponent,
-    FaIconComponent
+    IconComponent
   ],
   templateUrl: "./home.component.html",
   styleUrl: "./home.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush
 } )
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   public markers: google.maps.LatLngLiteral [ ] = [
     { lat: 55.42120422298265, lng: -2.7917159397115743 },
     { lat: 55.48180084772263, lng: -2.5512490699400674 },
@@ -46,11 +46,21 @@ export class HomeComponent {
   ]
 
   public zoom = 10
-  public loading = signal ( false )
+  public loading: WritableSignal<boolean> = signal ( true )
+  public loadingNewsletter: WritableSignal<boolean> = signal ( false )
 
-  public readonly iconSvc: IconService = inject ( IconService )
   private readonly modalSvc: NgbModal = inject ( NgbModal )
   private readonly apiSvc: ApiService = inject ( ApiService )
+  private readonly mapsSvc: MapsService = inject ( MapsService )
+
+  public ngOnInit ( ) {
+    this.mapsSvc.load ( ).then ( ( ) => {
+      this.loading.set ( false )
+    } ).catch ( error => {
+      console.error ( "Error loading Google Maps:", error )
+      this.loading.set ( false )
+    } )
+  }
 
   public expandImage ( index: number ) {
     const reference = this.modalSvc.open ( ExpandedImageComponent, { size: "lg", centered: true } )
@@ -59,13 +69,13 @@ export class HomeComponent {
   }
 
   public async openNewsletter ( ) {
-    this.loading.set ( true )
+    this.loadingNewsletter.set ( true )
     try {
       await this.getNewsletterLink ( )
     } catch ( e ) {
       console.error ( e )
     } finally {
-      this.loading.set ( false )
+      this.loadingNewsletter.set ( false )
     }
   }
 

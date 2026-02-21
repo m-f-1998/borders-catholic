@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core"
 import { ActivatedRoute, Router } from "@angular/router"
-import { FontAwesomeModule } from "@fortawesome/angular-fontawesome"
-import { IconService } from "@services/icons.service"
+import { IconComponent } from "app/icon/icon.component"
 
 @Component ( {
   selector: "app-error",
   imports: [
-    FontAwesomeModule
+    IconComponent
   ],
   templateUrl: "./error.component.html",
   styleUrl: "./error.component.scss",
@@ -25,7 +24,6 @@ export class ErrorComponent {
     },
   ]
 
-  public readonly iconSvc: IconService = inject ( IconService )
   private readonly route: ActivatedRoute = inject ( ActivatedRoute )
   private readonly router: Router = inject ( Router )
 

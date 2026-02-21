@@ -1,12 +1,11 @@
 
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core"
-import { FontAwesomeModule } from "@fortawesome/angular-fontawesome"
-import { IconService } from "@services/icons.service"
+import { ChangeDetectionStrategy, Component } from "@angular/core"
+import { IconComponent } from "app/icon/icon.component"
 
 @Component ( {
   selector: "app-footer",
   imports: [
-    FontAwesomeModule
+    IconComponent
   ],
   templateUrl: "./footer.component.html",
   styleUrl: "./footer.component.scss",
@@ -14,8 +13,6 @@ import { IconService } from "@services/icons.service"
 } )
 export class FooterComponent {
   public currentDate = new Date ( )
-
-  public readonly iconSvc: IconService = inject ( IconService )
 
   public copyrightNotice ( ) {
     const year = new Date ( ).getFullYear ( )
