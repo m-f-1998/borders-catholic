@@ -73,13 +73,13 @@ export class HomeComponent implements OnInit {
     try {
       const response = ( await this.apiSvc.get ( "/api/drive/newsletter" ) ) as { url?: string }
       if ( response.url ) {
-        // window.location.href = response.url
+        window.location.href = response.url
       } else {
-        // this.openNewsletterArchive ( )
+        this.openNewsletterArchive ( )
       }
     } catch ( error ) {
       console.error ( "Error fetching newsletter link:", error )
-      // this.openNewsletterArchive ( )
+      this.openNewsletterArchive ( )
     } finally {
       this.loadingNewsletter.set ( false )
     }
