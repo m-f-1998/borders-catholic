@@ -5,13 +5,22 @@
         <div class="col-sm-6 col-lg-6">
           <div class="card-wrap">
             <div class="image-wrap">
-              <img [src]="'/assets/img/' + priest.image">
+              <img src="/api/img/{{priest.image}}?w=640&f=webp"
+                srcset="
+                    /api/img/{{priest.image}}?w=320&f=webp 320w,
+                    /api/img/{{priest.image}}?w=640&f=webp 640w,
+                    /api/img/{{priest.image}}?w=1024&f=webp 1024w
+                "
+                loading="lazy"
+                decoding="async"
+                alt="{{priest.name}}"
+              />
             </div>
             <div class="content-wrap">
-              <h5 class="mbr-section-title card-title mbr-fonts-style align-center m-0 display-5">
+              <h5 class="mbr-section-title card-title mbr-fonts-style text-center m-0 display-5">
                 <strong>{{priest.name}}</strong>
               </h5>
-              <h6 class="mbr-role mbr-fonts-style align-center mb-3 display-4">
+              <h6 class="mbr-role mbr-fonts-style text-center mb-3 display-4">
                 <strong>{{priest.role}}</strong><br/>
                 <i>{{priest.residence}}</i>
               </h6>

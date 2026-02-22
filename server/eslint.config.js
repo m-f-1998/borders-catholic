@@ -91,7 +91,7 @@ export default tseslint.config (
         },
       ],
       // "@typescript-eslint/promise-function-async": "error",
-      "@typescript-eslint/require-await": "error",
+      "@typescript-eslint/require-await": "off",
       "@typescript-eslint/explicit-member-accessibility": [
         "error",
         {

@@ -35,18 +35,18 @@ export class HomeComponent implements OnInit {
   ]
   public center: google.maps.LatLngLiteral = { lat: 55.48180084772263, lng: -2.5512490699400674 }
   public images: string [ ] = [
-    "/assets/img/parish/parish-8.jpg",
-    "/assets/img/parish/parish-6.jpg",
-    "/assets/img/parish/parish-5.jpg",
-    "/assets/img/parish/parish-4.jpg",
-    "/assets/img/parish/parish-7.jpg",
-    "/assets/img/parish/parish-3.jpg",
-    "/assets/img/parish/parish-2.jpg",
-    "/assets/img/parish/parish-1.jpg"
+    "parish/parish-8.jpg",
+    "parish/parish-6.jpg",
+    "parish/parish-5.jpg",
+    "parish/parish-4.jpg",
+    "parish/parish-7.jpg",
+    "parish/parish-3.jpg",
+    "parish/parish-2.jpg",
+    "parish/parish-1.jpg"
   ]
 
   public zoom = 10
-  public loading: WritableSignal<boolean> = signal ( true )
+  public mapState: WritableSignal<{ loading: boolean; error: boolean }> = signal ( { loading: true, error: false } )
   public loadingNewsletter: WritableSignal<boolean> = signal ( false )
 
   private readonly modalSvc: NgbModal = inject ( NgbModal )
@@ -55,10 +55,10 @@ export class HomeComponent implements OnInit {
 
   public ngOnInit ( ) {
     this.mapsSvc.load ( ).then ( ( ) => {
-      this.loading.set ( false )
+      this.mapState.set ( { loading: false, error: false } )
     } ).catch ( error => {
       console.error ( "Error loading Google Maps:", error )
-      this.loading.set ( false )
+      this.mapState.set ( { loading: false, error: true } )
     } )
   }
 

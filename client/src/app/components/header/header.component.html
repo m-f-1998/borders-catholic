@@ -1,29 +1,27 @@
-<nav class="navbar navbar-expand-sm" style="background-color: #3399ff; height: 100%;" >
+<nav class="navbar navbar-expand-sm h-100" style="background-color: #3399ff;">
   <div class="container-fluid">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <button class="navbar-toggler" type="button" (click)="toggleMenu()">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNav" style="margin: 5px; transition: none 0s ease 0s !important;">
+    <div class="collapse navbar-collapse" [ngbCollapse]="isMenuCollapsed()">
       <ul class="navbar-nav">
-        <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
-          <a class="nav-link link show text-white display-4" [routerLink]="'/' + this.churchName()" [style.font-weight]="this.currentPage() == '' ? 'bold' : ''">
-              Home
+        <li class="nav-item">
+          <a class="nav-link link show display-4" (click)="goTo('')" [style.font-weight]="currentPage() == '' ? 'bold' : ''">
+            Home
           </a>
         </li>
-        <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
-          <a class="nav-link link show text-white display-4" [routerLink]="'sacraments'" [style.font-weight]="this.currentPage() == 'sacraments' ? 'bold' : ''">
-              Sacraments
+        <li class="nav-item">
+          <a class="nav-link link show display-4" (click)="goTo('sacraments')" [style.font-weight]="currentPage() == 'sacraments' ? 'bold' : ''">
+            Sacraments
           </a>
         </li>
-        @if ( currentPage ( ) === "" ) {
-          <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
-            <a class="nav-link link text-white display-4" (click)="scrollTo('sunday-mass')">
-                Mass Times
-            </a>
-          </li>
-        }
-        <li class="nav-item" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
-          <a class="nav-link link text-white display-4" (click)="scrollTo('contact')">
+        <li class="nav-item">
+          <button class="nav-link link display-4" (click)="goTo('', 'sunday-mass')" [disabled]="currentPage() != ''">
+            Mass Times
+          </button>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link link display-4" (click)="goTo(currentPage(), 'contact')">
             Contacts
           </a>
         </li>

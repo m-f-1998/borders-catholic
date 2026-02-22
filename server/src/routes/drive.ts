@@ -1,26 +1,11 @@
 import { addDays, format, getDay, subDays } from "date-fns"
-import { Router } from "express"
-import { rateLimit } from "express-rate-limit"
 import { google } from "googleapis"
 import { config } from "dotenv"
 import { resolve } from "path"
+import { FastifyPluginAsync } from "fastify"
 
 const envPath = resolve ( process.cwd ( ), ".env" )
 config ( { path: envPath, quiet: true } )
-
-export const router = Router ( )
-
-router.use ( rateLimit ( {
-  windowMs: 60 * 1000, // 1 minute
-  max: 100, // limit each IP to 100 requests per windowMs
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-  message: {
-    status: 429,
-    error: "Too many requests, please try again later.",
-    description: "You have exceeded the maximum number of requests allowed. Please wait a minute before trying again."
-  }
-} ) )
 
 const driveID = "1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG"
 
@@ -54,53 +39,52 @@ const listFiles = async ( parentId: string, referrer: string ) => {
 let cache: string = ""
 let newsletterDate: Date | null = null
 
-router.get ( "/api/newsletter", async ( req, res ) => {
-  try {
-    const dateStr = getPreviousSunday ( )
-    const date = new Date ( dateStr )
+export const router: FastifyPluginAsync = async app => {
+  app.get ( "/newsletter", async ( req, rep ) => {
+    try {
+      const dateStr = getPreviousSunday ( )
+      const date = new Date ( dateStr )
 
-    if ( cache && newsletterDate && format ( newsletterDate, "yyyy-MM-dd" ) === dateStr ) {
-      res.json ( { url: cache } )
-      return
-    } else {
-      cache = ""
-      newsletterDate = null
+      if ( cache && newsletterDate && format ( newsletterDate, "yyyy-MM-dd" ) === dateStr ) {
+        return rep.send ( { url: cache } )
+      } else {
+        cache = ""
+        newsletterDate = null
+      }
+
+      const yearName = format ( date, "yyyy" )
+      const monthName = monthFolderName ( date )
+
+      const yearFolder = ( await listFiles ( driveID, req.headers.referer ?? "" ) )
+        .find ( f => f.name === yearName )
+
+      if ( !yearFolder ) {
+        return rep.status ( 404 ).send ( { error: `Year folder "${yearName}" not found` } )
+      }
+
+      const monthFolder = ( await listFiles ( yearFolder.id ?? "", req.headers.referer ?? "" ) )
+        .find ( f => f.name === monthName )
+
+      if ( !monthFolder ) {
+        return rep.status ( 404 ).send ( { error: `Month folder "${monthName}" not found` } )
+      }
+
+      const files = await listFiles ( monthFolder.id ?? "", req.headers.referer ?? "" )
+      const file = files.find ( f => f.name === `${dateStr}.pdf` )
+
+      if ( file ) {
+        cache = `https://drive.google.com/file/d/${file.id}/view`
+        newsletterDate = date
+      }
+
+      const url = file
+        ? `https://drive.google.com/file/d/${file.id}/view`
+        : `https://drive.google.com/drive/folders/${driveID}`
+
+      return rep.send ( { url } )
+    } catch ( err ) {
+      console.error ( err )
+      return rep.status ( 500 ).send ( { error: "Unable to retrieve newsletter URL" } )
     }
-
-    const yearName = format ( date, "yyyy" )
-    const monthName = monthFolderName ( date )
-
-    const yearFolder = ( await listFiles ( driveID, req.headers.referer ?? "" ) )
-      .find ( f => f.name === yearName )
-
-    if ( !yearFolder ) {
-      res.status ( 404 ).json ( { error: `Year folder "${yearName}" not found` } )
-      return
-    }
-
-    const monthFolder = ( await listFiles ( yearFolder.id ?? "", req.headers.referer ?? "" ) )
-      .find ( f => f.name === monthName )
-
-    if ( !monthFolder ) {
-      res.status ( 404 ).json ( { error: `Month folder "${monthName}" not found` } )
-      return
-    }
-
-    const files = await listFiles ( monthFolder.id ?? "", req.headers.referer ?? "" )
-    const file = files.find ( f => f.name === `${dateStr}.pdf` )
-
-    if ( file ) {
-      cache = `https://drive.google.com/file/d/${file.id}/view`
-      newsletterDate = date
-    }
-
-    const url = file
-      ? `https://drive.google.com/file/d/${file.id}/view`
-      : `https://drive.google.com/drive/folders/${driveID}`
-
-    res.json ( { url } )
-  } catch ( err ) {
-    console.error ( err )
-    res.status ( 500 ).json ( { error: "Unable to retrieve newsletter URL" } )
-  }
-} )
+  } )
+}

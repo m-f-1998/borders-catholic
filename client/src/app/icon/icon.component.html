@@ -1,5 +1,1 @@
-@if (loading()) {
-  <fa-icon [icon]="['fas', 'spinner']" animation="spin" [size]="iconSize()" />
-} @else {
-  <fa-icon [icon]="icon()" [animation]="iconAnimation()" [size]="iconSize()" />
-}
+<fa-icon [icon]="iconProp()" [animation]="iconAnimation()" [size]="iconSize()" />

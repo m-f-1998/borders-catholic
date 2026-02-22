@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject, input, InputSignal, OnInit, signal, WritableSignal } from "@angular/core"
+import { ChangeDetectionStrategy, Component, input, InputSignal, OnInit, signal, WritableSignal } from "@angular/core"
 import { AnimationProp, FaIconComponent } from "@fortawesome/angular-fontawesome"
-import { IconName, IconProp, SizeProp } from "@fortawesome/fontawesome-svg-core"
-import { IconService } from "@services/icons.service"
+import { IconProp, SizeProp } from "@fortawesome/fontawesome-svg-core"
+import { BrandIcon, getIcon, SolidIcon } from "./icon.registry"
 
 @Component ( {
   selector: "app-icon",
@@ -12,24 +12,13 @@ import { IconService } from "@services/icons.service"
   changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class IconComponent implements OnInit {
-  public iconPrefix: InputSignal<"fas" | "fab"> = input<"fas" | "fab"> ( "fas" )
-  public iconName: InputSignal<IconName> = input.required ( )
+  public icon: InputSignal<SolidIcon | BrandIcon> = input.required ( )
   public iconAnimation: InputSignal<AnimationProp | undefined> = input<AnimationProp | undefined> ( )
   public iconSize: InputSignal<SizeProp | undefined> = input<SizeProp | undefined> ( )
 
-  public loading: WritableSignal<boolean> = signal ( true )
-  public icon: WritableSignal<IconProp | undefined> = signal ( undefined )
-
-  public readonly iconSvc: IconService = inject ( IconService )
+  public iconProp: WritableSignal<IconProp | undefined> = signal ( undefined )
 
   public ngOnInit ( ) {
-    this.loading.set ( true )
-    this.iconSvc.getIcon ( this.iconPrefix ( ), this.iconName ( ) ).then ( icon => {
-      this.icon.set ( icon )
-    } ).catch ( error => {
-      console.error ( "Error loading icon:", error )
-    } ).finally ( ( ) => {
-      this.loading.set ( false )
-    } )
+    this.iconProp.set ( getIcon ( this.icon ( ) ) )
   }
 }

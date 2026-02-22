@@ -1,19 +1,19 @@
-<app-header currentPage="sacraments" churchName="" />
+<app-header currentPage="sacraments" />
 
 <section class="header">
     <div class="mbr-overlay" style="opacity: 0.9; background-color: rgb(40, 43, 47);"></div>
     <div class="container">
-        <div class="row align-left justify-content-center align-content-around">
+        <div class="row text-left justify-content-center align-content-around">
             <div class="col-12 col-lg col-md-12 md-pb">
                 <div class="text-wrapper">
-                    <h1 class="mbr-section-title mbr-fonts-style align-left display-1">
+                    <h1 class="mbr-section-title mbr-fonts-style text-left display-1">
                         <strong>Sacraments</strong>
                     </h1>
-                    <h2 class="mbr-section-subtitle mbr-fonts-style mb-2 align-left display-7">
+                    <h2 class="mbr-section-subtitle mbr-fonts-style mb-2 text-left display-7">
                         <strong>Ss Mary and David</strong>
                     </h2>
-                    <h3 class="mbr-text mbr-fonts-style mb-4 align-left display-7">Hawick; Jedburgh; Kelso</h3>
-                    <p class="mbr-text mbr-fonts-style align-left display-7">
+                    <h3 class="mbr-text mbr-fonts-style mb-4 text-left display-7">Hawick; Jedburgh; Kelso</h3>
+                    <p class="mbr-text mbr-fonts-style text-left display-7">
                         The Sacraments are outward signs instituted by Christ which confer grace.  According to St. Thomas Aquinas, the Sacraments are also “signs in protestation [declaration] of the faith” (S.T. III, q. 61, a. 4, c).  Sacramentals, for their part, are “things or actions which the Church uses in a certain imitation of the Sacraments, in order, in virtue of her prayers, to achieve effects, above all of a spiritual nature” (CIC/17, §1144).
                         <br /><br />On this page you will find enquiry forms which can be sent to us if you wish to recieve a Sacrament within our parish. If you have any questions, please do not hesitate to get in touch with us.
                         <br /><br />May God bless you and we hope you will visit one of our churches soon.
@@ -21,7 +21,17 @@
                 </div>
             </div>
             <div class="col-12 col-md-12 col-lg-6 image-wrapper">
-                <img class="w-100" src="/assets/img/highlight.jpg" alt="Highlight Image">
+                <img src="/api/img/highlight.jpg?w=640&f=webp"
+                    srcset="
+                        /api/img/highlight.jpg?w=320&f=webp 320w,
+                        /api/img/highlight.jpg?w=640&f=webp 640w,
+                        /api/img/highlight.jpg?w=1024&f=webp 1024w
+                    "
+                    loading="lazy"
+                    decoding="async"
+                    alt="Main Background Image"
+                    class="w-100"
+                />
             </div>
         </div>
     </div>
@@ -29,10 +39,10 @@
 
 <section style="background-color: var(--bs-body-bg); border-bottom: 2px solid var(--bs-border-color);">
     <div class="container" style="margin-top: 50px; margin-bottom: 50px;">
-        <div class="row align-left justify-content-center align-content-around">
+        <div class="row text-left justify-content-center align-content-around">
             <div class="col-12 col-lg col-md-12 my-auto">
                 <div class="text-wrapper md-pb">
-                    <h1 class="mbr-section-title mbr-fonts-style align-left display-1">
+                    <h1 class="mbr-section-title mbr-fonts-style text-left display-1">
                         <strong style="color: var(--bs-emphasis-color);">Baptism</strong>
                     </h1>
                     <app-readmore
@@ -53,7 +63,18 @@
                 </div>
             </div>
             <div class="col-12 col-md-12 my-auto col-lg-6 image-wrapper">
-                <img style="border-radius: 2rem;" class="w-100" src="/assets/img/sacraments/baptism.jpg" alt="Sacrament of Baptism">
+                <img src="/api/img/sacraments/baptism.jpg?w=640&f=webp"
+                    srcset="
+                        /api/img/sacraments/baptism.jpg?w=320&f=webp 320w,
+                        /api/img/sacraments/baptism.jpg?w=640&f=webp 640w,
+                        /api/img/sacraments/baptism.jpg?w=1024&f=webp 1024w
+                    "
+                    loading="lazy"
+                    decoding="async"
+                    alt="Sacrament of Baptism"
+                    class="w-100"
+                    style="border-radius: 2rem;"
+                />
             </div>
         </div>
     </div>
@@ -61,10 +82,10 @@
 
 <section style="background-color: var(--bs-body-bg-rgb); border-bottom: 2px solid var(--bs-border-color);">
     <div class="container" style="margin-top: 50px; margin-bottom: 50px;">
-        <div class="row align-left justify-content-center align-content-around" style="flex-direction: row-reverse;">
+        <div class="row text-left justify-content-center align-content-around" style="flex-direction: row-reverse;">
             <div class="col-12 col-lg col-md-12 my-auto">
                 <div class="text-wrapper md-pb">
-                    <h1 class="mbr-section-title mbr-fonts-style mb-4 align-left display-1">
+                    <h1 class="mbr-section-title mbr-fonts-style mb-4 text-left display-1">
                         <strong style="color: var(--bs-emphasis-color);">Sacraments of Initiation</strong>
                     </h1>
                     <app-readmore
@@ -76,7 +97,18 @@
                 </div>
             </div>
             <div class="col-12 col-md-12 my-auto col-lg-6 image-wrapper">
-                <img style="border-radius: 2rem;" class="w-100" src="/assets/img/sacraments/initiation.jpg" alt="Sacraments of Initiation">
+                <img src="/api/img/sacraments/initiation.jpg?w=640&f=webp"
+                    srcset="
+                        /api/img/sacraments/initiation.jpg?w=320&f=webp 320w,
+                        /api/img/sacraments/initiation.jpg?w=640&f=webp 640w,
+                        /api/img/sacraments/initiation.jpg?w=1024&f=webp 1024w
+                    "
+                    loading="lazy"
+                    decoding="async"
+                    alt="Sacraments of Initiation"
+                    class="w-100"
+                    style="border-radius: 2rem;"
+                />
             </div>
         </div>
     </div>
@@ -84,10 +116,10 @@
 
 <section style="background-color: var(--bs-body-bg-rgb); border-bottom: 2px solid var(--bs-border-color);">
     <div class="container" style="margin-top: 50px; margin-bottom: 50px;">
-        <div class="row align-left justify-content-center align-content-around">
+        <div class="row text-left justify-content-center align-content-around">
             <div class="col-12 col-lg col-md-12 my-auto">
                 <div class="text-wrapper md-pb">
-                    <h1 class="mbr-section-title mbr-fonts-style mb-4 align-left display-1">
+                    <h1 class="mbr-section-title mbr-fonts-style mb-4 text-left display-1">
                         <strong style="color: var(--bs-emphasis-color);">Annointing of the Sick</strong>
                     </h1>
                     <app-readmore
@@ -103,7 +135,18 @@
                 </div>
             </div>
             <div class="col-12 col-md-12 my-auto col-lg-6 image-wrapper">
-                <img style="border-radius: 2rem;" class="w-100" src="/assets/img/sacraments/annointing.jpg" alt="Annointing of the Sick">
+                <img src="/api/img/sacraments/annointing.jpg?w=640&f=webp"
+                    srcset="
+                        /api/img/sacraments/annointing.jpg?w=320&f=webp 320w,
+                        /api/img/sacraments/annointing.jpg?w=640&f=webp 640w,
+                        /api/img/sacraments/annointing.jpg?w=1024&f=webp 1024w
+                    "
+                    loading="lazy"
+                    decoding="async"
+                    alt="Annointing of the Sick"
+                    class="w-100"
+                    style="border-radius: 2rem;"
+                />
             </div>
         </div>
     </div>
@@ -111,10 +154,10 @@
 
 <section style="background-color: var(--bs-body-bg-rgb); border-bottom: 2px solid var(--bs-border-color);">
     <div class="container" style="margin-top: 50px; margin-bottom: 50px;">
-        <div class="row align-left justify-content-center align-content-around" style="flex-direction: row-reverse;">
+        <div class="row text-left justify-content-center align-content-around" style="flex-direction: row-reverse;">
             <div class="col-12 col-lg col-md-12 my-auto">
                 <div class="text-wrapper md-pb">
-                    <h1 class="mbr-section-title mbr-fonts-style mb-4 align-left display-1">
+                    <h1 class="mbr-section-title mbr-fonts-style mb-4 text-left display-1">
                         <strong style="color: var(--bs-emphasis-color);">Marriage</strong>
                     </h1>
                     <app-readmore
@@ -125,7 +168,18 @@
                 </div>
             </div>
             <div class="col-12 col-md-12 my-auto col-lg-6 image-wrapper">
-                <img style="border-radius: 2rem;" class="w-100" src="/assets/img/sacraments/marriage.jpg" alt="Marriage">
+                <img src="/api/img/sacraments/marriage.jpg?w=640&f=webp"
+                    srcset="
+                        /api/img/sacraments/marriage.jpg?w=320&f=webp 320w,
+                        /api/img/sacraments/marriage.jpg?w=640&f=webp 640w,
+                        /api/img/sacraments/marriage.jpg?w=1024&f=webp 1024w
+                    "
+                    loading="lazy"
+                    decoding="async"
+                    alt="Marriage"
+                    class="w-100"
+                    style="border-radius: 2rem;"
+                />
             </div>
         </div>
     </div>

@@ -6,14 +6,24 @@
       <div class="content-center">
         <div class="profile-image">
           <a href="/">
-            <img src="/assets/img/highlight.jpg" alt="Profile Image" style="object-fit: cover;"/>
+            <img src="/api/img/highlight.jpg"
+              srcset="
+                  /api/img/highlight.jpg?w=320&f=webp 320w,
+                  /api/img/highlight.jpg?w=640&f=webp 640w,
+                  /api/img/highlight.jpg?w=1024&f=webp 1024w
+              "
+              loading="lazy"
+              decoding="async"
+              alt="Highlight Image"
+              style="object-fit: cover;"
+            />
           </a>
         </div>
         <div class="h2 title">{{error}}</div>
         <p>{{description}}</p>
         <div class="d-flex justify-content-center gap-2 flex-wrap">
           <a href="/" class="btn btn-lg btn-icon" rel="tooltip" title="Home" style="background-color: gray;">
-            <app-icon iconPrefix="fas" iconName="home" iconSize="lg" />
+            <app-icon icon="home" iconSize="lg" />
           </a>
           @for (link of socialLinks; track $index) {
             <a [href]="link.url" target="_blank" [class]="link.class" rel="tooltip" [title]="link.tooltip">

@@ -17,6 +17,17 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "stylePreprocessorOptions": {
+              "sass": {
+                "silenceDeprecations": [
+                  "import",
+                  "global-builtin",
+                  "color-functions",
+                  "abs-percent",
+                  "if-function"
+                ]
+              }
+            },
             "outputPath": "dist",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -32,11 +43,7 @@
               }
             ],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.scss"
-            ],
-            "scripts": [
-              "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ]
           },
           "configurations": {
@@ -44,22 +51,31 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "1mb",
-                  "maximumError": "2mb"
+                  "maximumWarning": "50kb",
+                  "maximumError": "100kb"
                 }
               ],
-              "optimization": {
+              "aot": true,
+              "sourceMap": {
                 "scripts": true,
-                "styles": {
-                    "minify": true,
-                    "inlineCritical": false
-                }
+                "styles": true,
+                "hidden": false
               },
+              "optimization": {
+                "styles": {
+                  "inlineCritical": false,
+                  "minify": true
+                },
+                "scripts": true,
+                "fonts": true
+              },
+              "namedChunks": false,
+              "extractLicenses": true,
               "outputHashing": "all"
             },
             "development": {
@@ -77,6 +93,7 @@
               "buildTarget": "borders-catholic:build:production"
             },
             "development": {
+              "proxyConfig": "./proxy/proxy.dev.json",
               "buildTarget": "borders-catholic:build:development"
             }
           },
