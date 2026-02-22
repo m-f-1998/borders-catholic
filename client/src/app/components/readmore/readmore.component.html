@@ -1,9 +1,9 @@
 <div class="col-12 col-lg col-md-12 my-auto mt-4">
   <div class="text-wrapper md-pb">
     @if ( subtitle() ) {
-      <h3 style="color: var(--bs-emphasis-color); font-style: italic;">{{subtitle()}}</h3>
+      <h3 class="emphasis-color fst-italic">{{subtitle()}}</h3>
     }
-    <p class="mbr-text mbr-fonts-style text-left display-7" style="color: var(--bs-emphasis-color); white-space: pre-line;">
+    <p class="mbr-text mbr-fonts-style text-left display-7 emphasis-color white-space-pre-line">
       @if ( content().length > this.MAXLENGTH && this.showReadMore() ) {
         <span>
           @if ( expanded() ) {
@@ -12,7 +12,7 @@
             {{this.getCutString ( )}}
           }
         </span>
-        <button style="color: #3399FF" class="mbr-section-subtitle mbr-fonts-style mb-2 text-left display-7" (click)="expand ( )">
+        <button class="mbr-section-subtitle mbr-fonts-style mb-2 text-left display-7 primary-standard-color" (click)="expand ( )">
           {{expanded() ? 'Collapse' : 'Expand'}}
         </button>
       } @else {

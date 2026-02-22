@@ -17,6 +17,7 @@ import { FooterComponent } from "@components/footer/footer.component"
     FooterComponent
   ],
   templateUrl: "./sacraments.component.html",
+  styleUrl: "./sacraments.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class SacramentsComponent {

@@ -100,15 +100,24 @@ await app.register ( helmet, {
       ],
       styleSrc: [
         "'self'",
+        // ( req: IncomingMessage ) => {
+        //   if ( req.cspNonce ) {
+        //     return `'nonce-${req.cspNonce}'`
+        //   }
+        //   return ""
+        // },
         "'unsafe-inline'",
-        "https://cdn.jsdelivr.net",
-        "https://fonts.googleapis.com",
-        // ( _req, res ) => `'nonce-${( res as Response ).locals[ "cspNonce" ]}'`,
+        "https://fonts.googleapis.com"
       ],
       scriptSrcElem: [
         "'self'",
         "'unsafe-inline'",
-        // ( _req, res ) => `'nonce-${( res as Response ).locals[ "cspNonce" ]}'`,
+        // ( req: IncomingMessage ) => {
+        //   if ( req.cspNonce ) {
+        //     return `'nonce-${req.cspNonce}'`
+        //   }
+        //   return ""
+        // },
         "https://www.googletagmanager.com",
         "https://maps.googleapis.com"
       ],
@@ -116,7 +125,6 @@ await app.register ( helmet, {
         "'self'",
         "data:",
         "https://www.googletagmanager.com",
-        "https://\*.jsdelivr.net",
         "https://universalis.com",
         "https://maps.googleapis.com",
         "https://maps.gstatic.com",

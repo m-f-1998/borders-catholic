@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-sm h-100" style="background-color: #3399ff;">
+<nav class="navbar navbar-expand-sm h-100 primary-background-color">
   <div class="container-fluid">
     <button class="navbar-toggler" type="button" (click)="toggleMenu()">
       <span class="navbar-toggler-icon"></span>
@@ -6,12 +6,12 @@
     <div class="collapse navbar-collapse" [ngbCollapse]="isMenuCollapsed()">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link link show display-4" (click)="goTo('')" [style.font-weight]="currentPage() == '' ? 'bold' : ''">
+          <a class="nav-link link show display-4" (click)="goTo('')" [class.fw-bold]="currentPage() == ''">
             Home
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link link show display-4" (click)="goTo('sacraments')" [style.font-weight]="currentPage() == 'sacraments' ? 'bold' : ''">
+          <a class="nav-link link show display-4" (click)="goTo('sacraments')" [class.fw-bold]="currentPage() == 'sacraments'">
             Sacraments
           </a>
         </li>

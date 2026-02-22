@@ -23,6 +23,11 @@
 @import "bootstrap/scss/utilities";
 @import "bootstrap/scss/utilities/api";
 
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/400-italic.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-sans/700.css";
+
 body {
   font-family: "IBM Plex Sans", sans-serif;
   font-style: normal;
@@ -143,4 +148,33 @@ a {
 
 .header .mbr-section-subtitle {
 	color: #3399ff;
+}
+
+.primary-background-color {
+  background-color: #3399ff;
+}
+
+.primary-standard-color {
+  color: #3399ff;
+}
+
+.max-width-500 {
+  max-width: 500px;
+}
+
+.emphasis-color {
+	color: var(--bs-emphasis-color);
+}
+
+.secondary-color {
+  background-color: var(--bs-secondary-bg);
+}
+
+.white-space-pre-line {
+  white-space: pre-line;
+}
+
+.overlay-background {
+	opacity: 0.9;
+	background-color: rgb(40, 43, 47);
 }

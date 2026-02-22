@@ -1,4 +1,4 @@
-<div class="mbr-overlay" style="opacity: 0.9; background-color: rgb(40, 43, 47);"></div>
+<div class="mbr-overlay overlay-background"></div>
 <div class="header-component">
   <div class="page-header page-header-small">
     <div class="page-header-image"></div>
@@ -15,19 +15,19 @@
               loading="lazy"
               decoding="async"
               alt="Highlight Image"
-              style="object-fit: cover;"
+              class="object-fit-cover"
             />
           </a>
         </div>
         <div class="h2 title">{{error}}</div>
         <p>{{description}}</p>
         <div class="d-flex justify-content-center gap-2 flex-wrap">
-          <a href="/" class="btn btn-lg btn-icon" rel="tooltip" title="Home" style="background-color: gray;">
+          <a href="/" class="btn btn-lg btn-icon home-icon" rel="tooltip" title="Home">
             <app-icon icon="home" iconSize="lg" />
           </a>
           @for (link of socialLinks; track $index) {
             <a [href]="link.url" target="_blank" [class]="link.class" rel="tooltip" [title]="link.tooltip">
-              <i [class]="link.icon"></i>
+              <app-icon [icon]="link.icon" iconSize="lg" />
             </a>
           }
         </div>

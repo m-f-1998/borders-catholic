@@ -1,40 +1,39 @@
-<footer id="footer" class="footer position-relative" style="background-color:var(--bs-secondary-bg)">
-    <div class="container">
-      <div class="d-flex justify-content-center align-items-center" (click)="goToAuthor()">
-        <img src="/api/img/author.jpg?w=640&f=webp"
-          srcset="
-              /api/img/author.jpg?w=320&f=webp 320w,
-              /api/img/author.jpg?w=640&f=webp 640w,
-              /api/img/author.jpg?w=1024&f=webp 1024w
-          "
-          loading="lazy"
-          decoding="async"
-          alt="Matthew Frankland"
-          class="clickable"
-          style="border: 2px white solid; width: 60px; border-radius: 50%; margin-right: 10px;"
-        />
-      </div>
-      <div class="credits mt-2">
-        <div class="copyright">
-            <span>
-              {{copyrightNotice()}}
-            </span>
-          </div>
-        Designed by <strong class="px-1 sitename">Matthew Frankland</strong>
-      </div>
-      <div class="social-links d-flex justify-content-center mt-2 flex-wrap">
-        <a href="mailto:admin@matthewfrankland.co.uk" class="soc-item btn-primary">
-          <app-icon icon="envelope" class="text-light" />
-        </a>
-        <a href="https://github.com/m-f-1998" class="soc-item btn-primary">
-          <app-icon icon="github" class="text-light" />
-        </a>
-        <a href="https://www.linkedin.com/in/mf48/" class="soc-item btn-primary">
-          <app-icon icon="linkedin" class="text-light" />
-        </a>
-        <a href="https://matthewfrankland.co.uk" class="soc-item btn-primary">
-          <app-icon icon="globe" class="text-light" />
-        </a>
-      </div>
+<footer id="footer" class="footer position-relative secondary-color">
+  <div class="container">
+    <div class="d-flex justify-content-center align-items-center" (click)="goToAuthor()">
+      <img src="/api/img/author.jpg?w=640&f=webp"
+        srcset="
+            /api/img/author.jpg?w=320&f=webp 320w,
+            /api/img/author.jpg?w=640&f=webp 640w,
+            /api/img/author.jpg?w=1024&f=webp 1024w
+        "
+        loading="lazy"
+        decoding="async"
+        alt="Matthew Frankland"
+        class="clickable author-link"
+      />
     </div>
+    <div class="credits mt-2">
+      <div class="copyright">
+        <span>
+          {{copyrightNotice()}}
+        </span>
+      </div>
+      Designed by <strong class="px-1 sitename">Matthew Frankland</strong>
+    </div>
+    <div class="social-links d-flex justify-content-center mt-2 flex-wrap">
+      <a href="mailto:admin@matthewfrankland.co.uk" class="soc-item btn-primary">
+        <app-icon icon="envelope" class="text-light" />
+      </a>
+      <a href="https://github.com/m-f-1998" class="soc-item btn-primary">
+        <app-icon icon="github" class="text-light" />
+      </a>
+      <a href="https://www.linkedin.com/in/mf48/" class="soc-item btn-primary">
+        <app-icon icon="linkedin" class="text-light" />
+      </a>
+      <a href="https://matthewfrankland.co.uk" class="soc-item btn-primary">
+        <app-icon icon="globe" class="text-light" />
+      </a>
+    </div>
+  </div>
 </footer>

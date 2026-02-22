@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core"
 import { ActivatedRoute, Router } from "@angular/router"
 import { IconComponent } from "app/icon/icon.component"
+import { BrandIcon, SolidIcon } from "app/icon/icon.registry"
 
 @Component ( {
   selector: "app-error",
@@ -15,10 +16,10 @@ export class ErrorComponent {
   public error = "500 Internal Server Error"
   public description = "Something went wrong."
 
-  public socialLinks = [
+  public socialLinks: Array<{ url: string; icon: SolidIcon | BrandIcon; class: string; tooltip: string }> = [
     {
       url: "https://facebook.com/ss.mary.david",
-      icon: "devicon-facebook-plain",
+      icon: "facebook",
       class: "btn btn-lg btn-icon facebook-link",
       tooltip: "Contact us on Facebook"
     },

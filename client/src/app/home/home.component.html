@@ -1,7 +1,7 @@
 <app-header currentPage="" />
 
 <section class="header">
-  <div class="mbr-overlay" style="opacity: 0.9; background-color: rgb(40, 43, 47);"></div>
+  <div class="mbr-overlay overlay-background"></div>
   <div class="container">
     <div class="row text-left justify-content-center align-content-around">
       <div class="col-12 col-lg col-md-12 md-pb">
@@ -26,14 +26,14 @@
             <br /><br />May God bless you and we hope you will visit one of our churches soon.
           </p>
           <div class="mbr-section-btn mt-4">
-            <button class="btn btn-primary display-4" (click)="openNewsletter()" style="border-radius: 100px;">
+            <button class="btn btn-primary display-4 border-radius-100" (click)="openNewsletter()">
               @if (loadingNewsletter()) {
                 <app-icon icon="spinner" iconAnimation="spin" />
               } @else {
                 Access This Weeks Newsletter
               }
             </button>
-            <button class="btn btn-primary display-4" (click)="openNewsletterArchive()" style="border-radius: 100px;">
+            <button class="btn btn-primary display-4 border-radius-100" (click)="openNewsletterArchive()">
               Access Our Newsletter Archive
             </button>
           </div>
@@ -90,7 +90,7 @@
 
 @if (mapState().loading) {
   <div class="d-flex justify-content-center flex-column align-items-center my-5">
-    <app-icon icon="spinner" iconAnimation="spin" class="text-primary" style="font-size: 3rem;" />
+    <app-icon icon="spinner" iconAnimation="spin" class="text-primary map-text-loading" />
     Map is loading... Please wait.
   </div>
 } @else if (mapState().error) {

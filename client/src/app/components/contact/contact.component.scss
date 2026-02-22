@@ -2,6 +2,7 @@
 	z-index: 2;
 	position: relative;
 }
+
 #contact .mbr-iconfont {
 	font-size: 2rem;
 	color: #ffffff;
@@ -11,6 +12,7 @@
 	border-radius: 6px;
 	text-align: center;
 }
+
 #contact .mbr-iconfont-big {
 	font-size: 10rem;
 	color: #3399ff;
@@ -21,10 +23,12 @@
 	transition: all 0.6s;
 	opacity: 0.3;
 }
+
 #contact .card-title,
 #contact .card-text {
 	transition: all 0.3s;
 }
+
 #contact .card-wrapper {
 	position: relative;
 	overflow: hidden;
@@ -34,27 +38,38 @@
 	transition: all 0.3s;
   background-color: var(--bs-secondary-bg);
 }
+
 #contact .card-wrapper:hover .mbr-iconfont-big {
 	transform: rotate(-20deg);
 }
+
 #contact .card-title,
 #contact .iconfont-wrapper {
   color: var(--bs-emphasis-color);
 }
+
 #contact .card-text {
   color: var(--bs-emphasis-color);
 }
+
 #contact .mbr-section-title {
 	color: #ffffff;
 	text-align: center;
 }
+
 #contact {
 	padding-top: 5rem;
 	padding-bottom: 5rem;
   background-color: var(--bs-body-bg-rgb);
   border-bottom: 2px solid var(--bs-border-color);
 }
+
 #contact .iconfont-wrapper {
 	padding-bottom: 1rem;
 	margin-bottom: 1rem;
+}
+
+.contact-padding {
+	padding-left: 20px;
+	padding-right: 20px;
 }
