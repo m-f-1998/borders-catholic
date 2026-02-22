@@ -48,7 +48,7 @@ await app.register ( compress, {
 
 await app.register ( cors, {
   origin: ( origin, callback ) => {
-    const allowedOrigins = [ "http://localhost:3000", "https://borderscatholic.co.uk" ]
+    const allowedOrigins = [ "http://localhost:4200", "http://localhost:3000", "https://borderscatholic.co.uk" ]
     if ( !origin || allowedOrigins.includes ( origin ) ) {
       callback ( null, true )
     } else {
@@ -110,8 +110,7 @@ await app.register ( helmet, {
         "'unsafe-inline'",
         // ( _req, res ) => `'nonce-${( res as Response ).locals[ "cspNonce" ]}'`,
         "https://www.googletagmanager.com",
-        "https://maps.googleapis.com",
-        "https://unpkg.com"
+        "https://maps.googleapis.com"
       ],
       imgSrc: [
         "'self'",
@@ -127,7 +126,7 @@ await app.register ( helmet, {
         "https://www.googleapis.com",
         "https://\*.google-analytics.com",
         "https://\*.google.com",
-        "https://maps.googleapis.com",
+        "https://maps.googleapis.com"
       ],
       frameSrc: [
         "'self'",

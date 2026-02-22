@@ -71,9 +71,15 @@ export class HomeComponent implements OnInit {
   public async openNewsletter ( ) {
     this.loadingNewsletter.set ( true )
     try {
-      await this.getNewsletterLink ( )
-    } catch ( e ) {
-      console.error ( e )
+      const response = ( await this.apiSvc.get ( "/api/drive/newsletter" ) ) as { url?: string }
+      if ( response.url ) {
+        // window.location.href = response.url
+      } else {
+        // this.openNewsletterArchive ( )
+      }
+    } catch ( error ) {
+      console.error ( "Error fetching newsletter link:", error )
+      // this.openNewsletterArchive ( )
     } finally {
       this.loadingNewsletter.set ( false )
     }
@@ -81,19 +87,5 @@ export class HomeComponent implements OnInit {
 
   public openNewsletterArchive ( ) {
     window.location.href = "https://drive.google.com/drive/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG"
-  }
-
-  private async getNewsletterLink ( ) {
-    try {
-      const response: any = await this.apiSvc.get ( "/api/newsletter" )
-      if ( response.url ) {
-        window.location.href = response.url
-      } else {
-        this.openNewsletterArchive ( )
-      }
-    } catch ( error ) {
-      console.error ( "Error fetching newsletter link:", error )
-      this.openNewsletterArchive ( )
-    }
   }
 }

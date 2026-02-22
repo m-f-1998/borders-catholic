@@ -1,11 +1,14 @@
-import { addDays, format, getDay, subDays } from "date-fns"
-import { google } from "googleapis"
 import { config } from "dotenv"
 import { resolve } from "path"
-import { FastifyPluginAsync } from "fastify"
 
 const envPath = resolve ( process.cwd ( ), ".env" )
 config ( { path: envPath, quiet: true } )
+
+const isDevMode = ( ) => process.env [ "DEV" ] === "true"
+
+import { addDays, format, getDay, subDays } from "date-fns"
+import { google } from "googleapis"
+import { FastifyPluginAsync } from "fastify"
 
 const driveID = "1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG"
 
@@ -18,8 +21,10 @@ const getPreviousSunday = ( ) => {
 
 const monthFolderName = ( date: Date ) => `${format ( date, "MM" )} - ${format ( date, "LLLL" )}`
 
-const listFiles = async ( parentId: string, referrer: string ) => {
+const listFiles = async ( parentId: string ) => {
   if ( !parentId ) return [ ]
+
+  const referrer = isDevMode ( ) ? "http://localhost:3000" : "https://borderscatholic.co.uk"
 
   const drive = google.drive ( {
     version: "v3",
@@ -40,7 +45,7 @@ let cache: string = ""
 let newsletterDate: Date | null = null
 
 export const router: FastifyPluginAsync = async app => {
-  app.get ( "/newsletter", async ( req, rep ) => {
+  app.get ( "/newsletter", async ( _req, rep ) => {
     try {
       const dateStr = getPreviousSunday ( )
       const date = new Date ( dateStr )
@@ -55,21 +60,21 @@ export const router: FastifyPluginAsync = async app => {
       const yearName = format ( date, "yyyy" )
       const monthName = monthFolderName ( date )
 
-      const yearFolder = ( await listFiles ( driveID, req.headers.referer ?? "" ) )
+      const yearFolder = ( await listFiles ( driveID ) )
         .find ( f => f.name === yearName )
 
       if ( !yearFolder ) {
         return rep.status ( 404 ).send ( { error: `Year folder "${yearName}" not found` } )
       }
 
-      const monthFolder = ( await listFiles ( yearFolder.id ?? "", req.headers.referer ?? "" ) )
+      const monthFolder = ( await listFiles ( yearFolder.id ?? "" ) )
         .find ( f => f.name === monthName )
 
       if ( !monthFolder ) {
         return rep.status ( 404 ).send ( { error: `Month folder "${monthName}" not found` } )
       }
 
-      const files = await listFiles ( monthFolder.id ?? "", req.headers.referer ?? "" )
+      const files = await listFiles ( monthFolder.id ?? "" )
       const file = files.find ( f => f.name === `${dateStr}.pdf` )
 
       if ( file ) {

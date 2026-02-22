@@ -4,7 +4,7 @@ import { join, normalize, resolve } from "path"
 const envPath = resolve ( process.cwd ( ), ".env" )
 config ( { path: envPath, quiet: true } )
 
-export const isDevMode = ( ) => process.env [ "DEV" ] === "true"
+const isDevMode = ( ) => process.env [ "DEV" ] === "true"
 
 import sharp from "sharp"
 import { existsSync } from "fs"

@@ -34,8 +34,6 @@ export const router: FastifyPluginAsync = async app => {
           const contentType = mime.getType ( fileExt ) || "application/octet-stream"
           const stream = createReadStream ( address )
           return rep.type ( contentType ).send ( stream )
-        } else {
-          return rep.status ( 404 ).send ( "Not Found" )
         }
       } catch ( err ) {
         console.error ( err )
@@ -60,7 +58,6 @@ export const router: FastifyPluginAsync = async app => {
         html = html.replace ( "</head>", `${metaTag}</head>` )
       }
       html = loadGoogleMaps ( html, nonce )
-      html = injectScripts ( html, nonce, "https://unpkg.com/default-passive-events" )
       html = injectGoogleTagManager ( html, nonce )
       return html
     } else {
@@ -83,14 +80,14 @@ const loadGoogleMaps = ( html: string, nonce: string ): string => {
   return html + script
 }
 
-const injectScripts = ( html: string, nonce: string, url: string ): string => {
-  const script = `<script nonce="${nonce}" type="module" async defer src="${url}"></script>`
-  const headIndex = html.indexOf ( "</head>" )
-  if ( headIndex !== -1 ) {
-    return html.slice ( 0, headIndex ) + script + html.slice ( headIndex )
-  }
-  return html + script
-}
+// const injectScripts = ( html: string, nonce: string, url: string ): string => {
+//   const script = `<script nonce="${nonce}" type="module" async defer src="${url}"></script>`
+//   const headIndex = html.indexOf ( "</head>" )
+//   if ( headIndex !== -1 ) {
+//     return html.slice ( 0, headIndex ) + script + html.slice ( headIndex )
+//   }
+//   return html + script
+// }
 
 const injectGoogleTagManager = ( html: string, nonce: string ): string => {
   const gtmScript = `<script nonce="${nonce}" async src="https://www.googletagmanager.com/gtag/js?id=G-8BJ3R2M3MR"></script>
