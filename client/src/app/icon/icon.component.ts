@@ -15,6 +15,7 @@ export class IconComponent implements OnInit {
   public icon: InputSignal<SolidIcon | BrandIcon> = input.required ( )
   public iconAnimation: InputSignal<AnimationProp | undefined> = input<AnimationProp | undefined> ( )
   public iconSize: InputSignal<SizeProp | undefined> = input<SizeProp | undefined> ( )
+  public fixedWidth: InputSignal<boolean> = input<boolean> ( false )
 
   public iconProp: WritableSignal<IconProp | undefined> = signal ( undefined )
 

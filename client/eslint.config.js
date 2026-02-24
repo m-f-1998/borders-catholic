@@ -1,8 +1,9 @@
 import stylistic from "@stylistic/eslint-plugin";
 import tseslint from "typescript-eslint";
 import angular from "angular-eslint";
+import { defineConfig } from "eslint/config";
 
-export default tseslint.config(
+export default defineConfig (
   {
     ignores: [
       "node_modules/**/*",

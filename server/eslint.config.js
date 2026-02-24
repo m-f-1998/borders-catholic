@@ -1,8 +1,9 @@
 import stylistic from "@stylistic/eslint-plugin"
 import tseslint from "typescript-eslint"
 import importPlugin from "eslint-plugin-import"
+import { defineConfig } from "eslint/config"
 
-export default tseslint.config (
+export default defineConfig (
   importPlugin.flatConfigs.recommended,
   {
     ignores: [
