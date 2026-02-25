@@ -15,6 +15,7 @@ const IMAGE_DIR = join ( process.cwd ( ), "../", "assets", "img", )
 const SUPPORTED_FORMATS = [ "webp", "avif", "jpeg", "png" ]
 
 sharp.cache ( !isDevMode ( ) )
+sharp.concurrency ( isDevMode ( ) ? 1 : 4 )
 
 export const router: FastifyPluginAsync = async app => {
   app.get ( "/*", async ( req, rep ) => {
