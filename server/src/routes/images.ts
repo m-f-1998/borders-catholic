@@ -7,8 +7,9 @@ config ( { path: envPath, quiet: true } )
 const isDevMode = ( ) => process.env [ "DEV" ] === "true"
 
 import sharp from "sharp"
-import { existsSync } from "fs"
+import { existsSync, statSync } from "fs"
 import { FastifyPluginAsync } from "fastify"
+import { createHash } from "crypto"
 
 const IMAGE_DIR = join ( process.cwd ( ), "../", "assets", "img", )
 
@@ -42,6 +43,11 @@ export const router: FastifyPluginAsync = async app => {
         return rep.status ( 404 ).send ( "Image not found" )
       }
 
+      const stats = statSync ( inputPath )
+      const lastModified = stats.mtime.toUTCString ( )
+      const etagBase = `${stats.mtimeMs}-${stats.size}-${width}-${height}-${format}-${quality}`
+      const etag = createHash ( "sha1" ).update ( etagBase ).digest ( "hex" )
+
       let transformer = sharp ( inputPath )
         .resize ( width, height, { fit: "inside", withoutEnlargement: true } )
 
@@ -62,6 +68,9 @@ export const router: FastifyPluginAsync = async app => {
       rep.type ( format )
       rep.header ( "content-length", ( await transformer.toBuffer ( ) ).length )
       rep.header ( "content-disposition", `inline; filename="${filename.replace ( /"/g, "" ).replace ( /\s/g, "_" )}"` )
+      rep.header ( "cache-control", "public, max-age=31536000" )
+      rep.header ( "last-modified", lastModified )
+      rep.header ( "etag", etag )
       return rep.send ( await transformer.toBuffer ( ) )
     } catch ( err ) {
       console.error ( err )
