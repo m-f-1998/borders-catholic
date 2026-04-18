@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core"
 import { ActivatedRoute, Router } from "@angular/router"
-import { IconComponent } from "app/icon/icon.component"
-import { BrandIcon, SolidIcon } from "app/icon/icon.registry"
+import { IconComponent } from "@app/icon/icon.component"
+import { BrandIcon, SolidIcon } from "@app/icon/icon.registry"
 
 @Component ( {
   selector: "app-error",

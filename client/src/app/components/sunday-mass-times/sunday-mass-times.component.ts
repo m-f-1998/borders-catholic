@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, InputSignal } from "@angular/core"
-import { IconComponent } from "app/icon/icon.component"
+import { IconComponent } from "@app/icon/icon.component"
 
 @Component ( {
   selector: "app-sunday-masses",

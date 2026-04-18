@@ -36,7 +36,7 @@
 	padding: 4rem 3rem;
 	box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.3);
 	transition: all 0.3s;
-  background-color: var(--bs-secondary-bg);
+  background-color: var(--bs-tertiary-bg);
 }
 
 #contact .card-wrapper:hover .mbr-iconfont-big {
@@ -60,7 +60,7 @@
 #contact {
 	padding-top: 5rem;
 	padding-bottom: 5rem;
-  background-color: var(--bs-body-bg-rgb);
+  background-color: var(--bs-secondary-bg);
   border-bottom: 2px solid var(--bs-border-color);
 }
 

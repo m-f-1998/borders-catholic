@@ -31,8 +31,10 @@ IMAGE="ghcr.io/$USERNAME/$REPO_NAME:$TAG"
 echo "📦 Compiling project..."
 "$SCRIPT_DIR/docker/compile.sh"
 
-echo "🐳 Building Docker image: $IMAGE"
-docker build -f docker/Dockerfile -t $IMAGE .
+if ! docker buildx inspect multiarch > /dev/null 2>&1; then
+  echo "🔧 Creating new buildx builder..."
+  docker buildx create --name multiarch --use
+fi
 
 if ! docker info 2>/dev/null | grep -q 'ghcr.io'; then
   echo "🔐 Logging into GitHub Container Registry..."
@@ -41,7 +43,11 @@ else
   echo "🔓 Already logged into GitHub Container Registry."
 fi
 
-echo "📤 Pushing image to GHCR..."
-docker push $IMAGE
+echo "🐳 Building and Pushing Multi-Arch Docker image: $IMAGE"
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  -f docker/Dockerfile \
+  -t $IMAGE \
+  --push .
 
 echo "✅ Success! Image pushed to: $IMAGE"

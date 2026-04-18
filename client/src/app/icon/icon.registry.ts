@@ -1,4 +1,5 @@
 import {
+  faCalendar,
   faChurch,
   faEnvelope,
   faEnvelopeOpen,
@@ -23,7 +24,8 @@ const icons = {
     "map-pin": faMapPin,
     "mobile-alt": faMobileAlt,
     "phone": faPhone,
-    "spinner": faSpinner
+    "spinner": faSpinner,
+    "calendar": faCalendar
   },
   "fab": {
     "facebook": faFacebook,

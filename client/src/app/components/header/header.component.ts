@@ -2,14 +2,17 @@
 import { ChangeDetectionStrategy, Component, inject, input, InputSignal, signal, WritableSignal } from "@angular/core"
 import { Router, RouterModule } from "@angular/router"
 import { NgbCollapse } from "@ng-bootstrap/ng-bootstrap/collapse"
+import { IconComponent } from "@app/icon/icon.component"
 
 @Component ( {
   selector: "app-header",
   imports: [
     RouterModule,
-    NgbCollapse
+    NgbCollapse,
+    IconComponent
   ],
   templateUrl: "./header.component.html",
+  styleUrl: "./header.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class HeaderComponent {

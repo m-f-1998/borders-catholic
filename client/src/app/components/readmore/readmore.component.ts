@@ -14,7 +14,7 @@ export class ReadmoreComponent {
   public showReadMore: InputSignal<boolean> = input<boolean> ( true )
 
   public expanded: WritableSignal<boolean> = signal<boolean> ( false )
-  public MAXLENGTH: number = 400
+  public MAXLENGTH: number = 300
 
   public expand ( ) {
     this.expanded.set ( !this.expanded ( ) )

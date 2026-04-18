@@ -8,7 +8,7 @@ import { PriestsComponent } from "@components/priests/priests.component"
 import { ContactComponent } from "@components/contact/contact.component"
 import { FooterComponent } from "@components/footer/footer.component"
 import { ApiService } from "@services/api.service"
-import { IconComponent } from "app/icon/icon.component"
+import { IconComponent } from "@app/icon/icon.component"
 import { MapsService } from "@services/maps.service"
 
 @Component ( {

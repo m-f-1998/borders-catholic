@@ -1,12 +1,8 @@
 
 import { ChangeDetectionStrategy, Component } from "@angular/core"
-import { IconComponent } from "app/icon/icon.component"
 
 @Component ( {
   selector: "app-footer",
-  imports: [
-    IconComponent
-  ],
   templateUrl: "./footer.component.html",
   styleUrl: "./footer.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush

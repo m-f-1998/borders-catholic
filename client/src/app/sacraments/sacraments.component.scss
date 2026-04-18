@@ -1,11 +1,14 @@
-.sacrament-overlay {
+.sacrament-overlay-1 {
   background-color: var(--bs-body-bg);
-  border-bottom: 2px solid var(--bs-border-color);
+}
+
+.sacrament-overlay-2 {
+  background-color: var(--bs-secondary-bg);
 }
 
 .sacrament-container-margin {
-  margin-top: 50px;
-  margin-bottom: 50px;
+  padding-top: 50px;
+  padding-bottom: 50px;
 }
 
 .sacrament-image-radius {
