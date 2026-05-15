@@ -1,32 +1,33 @@
 #priests {
-	padding-top: 3rem;
-	padding-bottom: 3rem;
-	border-bottom: 2px solid var(--bs-border-color);
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 2px solid var(--border-color);
 }
 
 .card-wrap {
-	transition: all 0.3s;
-	color: var(--bs-emphasis-color);
-	background-color: var(--bs-secondary-bg);
+  transition: all 0.3s;
+  color: var(--emphasis-color);
+  background-color: var(--secondary-bg);
+  height: 100%;
 }
 
 .card-wrap:hover {
-	color: white;
-	background: #3399ff;
+  color: white;
+  background: #3399ff;
 }
 
 #priests .card-wrap {
-	border-radius: 20px;
-	overflow: hidden;
-	border: 1px solid #efefef;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid #efefef;
 }
 
 #priests .card-wrap .image-wrap img {
-	width: 100%;
-	object-fit: cover;
-	object-position: top;
+  width: 100%;
+  object-fit: cover;
+  object-position: top;
 }
 
 #priests .card-wrap .content-wrap {
-	padding: 1rem;
+  padding: 1rem;
 }

@@ -1,8 +1,8 @@
 <div id="priests">
   <div class="container">
-    <div class="row justify-content-center">
+    <div class="flex flex-wrap justify-center gap-6">
       @for ( priest of priests(); track priest.name ) {
-        <div class="col-sm-6 col-lg-5">
+        <div class="w-full sm:w-80">
           <div class="card-wrap">
             <div class="image-wrap">
               <img src="/api/img/{{priest.image}}?w=640&f=webp"

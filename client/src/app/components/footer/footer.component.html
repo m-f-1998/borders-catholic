@@ -1,25 +1,10 @@
-<footer id="footer" class="footer position-relative secondary-color">
-  <div class="container">
-    <div class="d-flex justify-content-center align-items-center" (click)="goToAuthor()">
-      <img src="/api/img/author.jpg?w=640&f=webp"
-        srcset="
-            /api/img/author.jpg?w=320&f=webp 320w,
-            /api/img/author.jpg?w=640&f=webp 640w,
-            /api/img/author.jpg?w=1024&f=webp 1024w
-        "
-        loading="lazy"
-        decoding="async"
-        alt="Matthew Frankland"
-        class="clickable author-link border border-2 border-primary"
-      />
+<footer>
+  <div class="border-t border-gray-300 dark:border-slate-700 bg-gray-100 dark:bg-slate-900 text-center px-4 py-4">
+    <div class="text-sm text-gray-500 dark:text-slate-400 space-y-1">
+      <div>{{copyrightNotice()}}</div>
     </div>
-    <div class="credits mt-2">
-      <div class="copyright">
-        <span>
-          {{copyrightNotice()}}
-        </span>
-      </div>
-      Designed by <a href="https://matthewfrankland.co.uk" class="sitename">Matthew Frankland</a>.
-    </div>
+    <p class="mt-1 mb-0 text-sm text-gray-500 dark:text-slate-400">
+      Website Designed by <a href="https://matthewfrankland.co.uk" class="text-primary hover:text-primary-hover transition-colors">Matthew Frankland</a>
+    </p>
   </div>
 </footer>

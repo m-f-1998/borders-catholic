@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ES2022",
+    "module": "nodenext",
     "baseUrl": "./",
-    "moduleResolution": "Node",
+    "moduleResolution": "nodenext",
     "typeRoots": [
       "node_modules/@types"
     ],

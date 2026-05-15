@@ -1,0 +1,170 @@
+<section class="sacraments-section" id="sacraments">
+  <div class="container">
+    <div class="section-heading">
+      <h2 class="display-2 font-bold emphasis-color">Sacraments</h2>
+      <div class="section-accent"></div>
+      <p class="display-4 mt-3 emphasis-color">
+        The Sacraments are outward signs instituted by Christ which confer grace. Click any sacrament below for more information or to access an enquiry form.
+      </p>
+    </div>
+
+    <div class="sacraments-accordion">
+
+      <div class="accordion-item">
+        <button class="accordion-header" [class.open]="openSacrament() === 'baptism'" (click)="toggleSacrament('baptism')">
+          <div class="flex items-center gap-4">
+            <div class="icon-bubble"><app-icon icon="droplet" /></div>
+            <span class="accordion-title">Baptism</span>
+          </div>
+          <span class="chevron" [class.open]="openSacrament() === 'baptism'">
+            <app-icon icon="chevron-down" />
+          </span>
+        </button>
+        @if (openSacrament() === 'baptism') {
+          <div class="accordion-body">
+            <div class="flex flex-wrap gap-8 items-start">
+              <div class="w-full lg:flex-1">
+                <app-readmore [showReadMore]="false"
+                  subtitle="Infant"
+                  content="Typically, individuals are brought to the Church by their parents to be baptised as infants in the first months of their life. This takes place during Sunday Mass or at another ceremony in which the family and the parish join in declaring their faith and expressing their desire that God share His life with this child by incorporating him or her into Christ. If this is a first child, parents undergo a period of preparation before the baptism takes place."
+                  fileName="Enquiry Form"
+                  fileURL="/assets/docs/baptism.docx" />
+                <app-readmore [showReadMore]="false"
+                  subtitle="Children"
+                  content="Once children reach the age of discretion (generally around age 7) the Church recognises that they are capable of a greater degree of understanding and personal desire for baptism. These children are enrolled in the Rite of Christian Initiation for Children which involves a period of preparation beginning in the Autumn, leading to reception of the Sacraments of Baptism, Confirmation and Holy Communion in one ceremony, usually during the Easter Vigil."
+                  fileName="Enquiry Form"
+                  fileURL="/assets/docs/rcic.docx" />
+                <app-readmore [showReadMore]="false"
+                  subtitle="Adults"
+                  content="Adults who wish to be baptised enrol for the Rite of Christian Initiation for Adults. They undergo a period of instruction and preparation leading to reception of the Sacraments of Baptism, Confirmation and Holy Communion in one ceremony, usually during the Easter Vigil. Adults who have been baptised in another Christian denomination and who desire to be received into the Catholic Church also enrol for the Rite of Christian Initiation for Adults and undergo the same period of instruction and preparation leading to Confirmation and Holy Communion at the Easter Vigil."
+                  fileName="Enquiry Form"
+                  fileURL="/assets/docs/rcia.docx" />
+              </div>
+              <div class="w-full lg:w-5/12">
+                <img src="/api/img/sacraments/baptism.jpg?w=640&f=webp"
+                  srcset="
+                      /api/img/sacraments/baptism.jpg?w=320&f=webp 320w,
+                      /api/img/sacraments/baptism.jpg?w=640&f=webp 640w,
+                      /api/img/sacraments/baptism.jpg?w=1024&f=webp 1024w
+                  "
+                  loading="lazy" decoding="async" alt="Sacrament of Baptism"
+                  class="w-full rounded-2xl" />
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" [class.open]="openSacrament() === 'initiation'" (click)="toggleSacrament('initiation')">
+          <div class="flex items-center gap-4">
+            <div class="icon-bubble"><app-icon icon="hands-praying" /></div>
+            <span class="accordion-title">Sacraments of Initiation</span>
+          </div>
+          <span class="chevron" [class.open]="openSacrament() === 'initiation'">
+            <app-icon icon="chevron-down" />
+          </span>
+        </button>
+        @if (openSacrament() === 'initiation') {
+          <div class="accordion-body">
+            <div class="flex flex-wrap gap-8 items-start">
+              <div class="w-full lg:flex-1">
+                <app-readmore [showReadMore]="false"
+                  content="In the Parishes of Ss Mary & David in Hawick, The Immaculate Conception in Jedburgh and St Mary's in Kelso, children begin their sacramental preparation when they reach school class P4. During the course of one year they prepare for and receive the Sacrament of Reconciliation (Confession) for the first time followed by First Holy Communion.
+
+Children prepare for and receive Confirmation once they reach P7. Children who are enrolled at a local Catholic Primary School do their preparation at school. Children who are enrolled at other schools attend classes run by parish catechists at the parish house in Hawick."
+                  fileName="Enrolment Form"
+                  fileURL="/assets/docs/initiation.docx" />
+              </div>
+              <div class="w-full lg:w-5/12">
+                <img src="/api/img/sacraments/initiation.jpg?w=640&f=webp"
+                  srcset="
+                      /api/img/sacraments/initiation.jpg?w=320&f=webp 320w,
+                      /api/img/sacraments/initiation.jpg?w=640&f=webp 640w,
+                      /api/img/sacraments/initiation.jpg?w=1024&f=webp 1024w
+                  "
+                  loading="lazy" decoding="async" alt="Sacraments of Initiation"
+                  class="w-full rounded-2xl" />
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" [class.open]="openSacrament() === 'anointing'" (click)="toggleSacrament('anointing')">
+          <div class="flex items-center gap-4">
+            <div class="icon-bubble"><app-icon icon="cross" /></div>
+            <span class="accordion-title">Anointing of the Sick</span>
+          </div>
+          <span class="chevron" [class.open]="openSacrament() === 'anointing'">
+            <app-icon icon="chevron-down" />
+          </span>
+        </button>
+        @if (openSacrament() === 'anointing') {
+          <div class="accordion-body">
+            <div class="flex flex-wrap gap-8 items-start">
+              <div class="w-full lg:flex-1">
+                <app-readmore [showReadMore]="false"
+                  content="The Church believes and confesses that among the seven sacraments there is one especially intended to strengthen those who are being tried by illness, the Anointing of the Sick: This sacred anointing of the sick was instituted by Christ our Lord as a true and proper sacrament of the New Testament. It is alluded to indeed by Mark (6:13), but is recommended to the faithful and promulgated by James the apostle and brother of the Lord…
+
+Is any among you sick? Let him call for the elders of the church, and let them pray over him, anointing him with oil in the name of the Lord; and the prayer of faith will save the sick man, and the Lord will raise him up; and if he has committed sins, he will be forgiven (Jas 5:14-15).
+
+The sacrament of Anointing of the Sick is given to those who are seriously ill by anointing them on the forehead and hands with duly blessed oil – pressed from olives or from other plants – saying, only once: 'Through this holy anointing may the Lord in his love and mercy help you with the grace of the Holy Spirit. May the Lord who frees you from sin save you and raise you up.'
+
+Going into hospital? If you are going into hospital for a serious operation and would like to receive the Anointing of the Sick beforehand, please contact the priest.
+
+Sick at home? If you or anyone you know is sick at home and would like a visit please don't hesitate to get in touch. The priest will be happy to arrange to come and see you and bring Communion if appropriate." />
+              </div>
+              <div class="w-full lg:w-5/12">
+                <img src="/api/img/sacraments/annointing.jpg?w=640&f=webp"
+                  srcset="
+                      /api/img/sacraments/annointing.jpg?w=320&f=webp 320w,
+                      /api/img/sacraments/annointing.jpg?w=640&f=webp 640w,
+                      /api/img/sacraments/annointing.jpg?w=1024&f=webp 1024w
+                  "
+                  loading="lazy" decoding="async" alt="Anointing of the Sick"
+                  class="w-full rounded-2xl" />
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" [class.open]="openSacrament() === 'marriage'" (click)="toggleSacrament('marriage')">
+          <div class="flex items-center gap-4">
+            <div class="icon-bubble"><app-icon icon="ring" /></div>
+            <span class="accordion-title">Marriage</span>
+          </div>
+          <span class="chevron" [class.open]="openSacrament() === 'marriage'">
+            <app-icon icon="chevron-down" />
+          </span>
+        </button>
+        @if (openSacrament() === 'marriage') {
+          <div class="accordion-body">
+            <div class="flex flex-wrap gap-8 items-start">
+              <div class="w-full lg:flex-1">
+                <app-readmore [showReadMore]="false"
+                  content="Couples wanting to marry in the Catholic Church must give at least 6 months notice to the parish priest. This is to ensure availability of the church, to complete a marriage preparation course and to do the necessary paperwork. Please contact the priest directly or fill in and return the form below."
+                  fileName="Enquiry Form"
+                  fileURL="/assets/docs/marriage.docx" />
+              </div>
+              <div class="w-full lg:w-5/12">
+                <img src="/api/img/sacraments/marriage.jpg?w=640&f=webp"
+                  srcset="
+                      /api/img/sacraments/marriage.jpg?w=320&f=webp 320w,
+                      /api/img/sacraments/marriage.jpg?w=640&f=webp 640w,
+                      /api/img/sacraments/marriage.jpg?w=1024&f=webp 1024w
+                  "
+                  loading="lazy" decoding="async" alt="Marriage"
+                  class="w-full rounded-2xl" />
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+    </div>
+  </div>
+</section>

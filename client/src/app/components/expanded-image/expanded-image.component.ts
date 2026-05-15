@@ -1,20 +1,22 @@
 
-import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core"
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap"
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core"
+import { IconComponent } from "@app/icon/icon.component"
 
 @Component ( {
   selector: "app-expanded-image",
   templateUrl: "./expanded-image.component.html",
+  styleUrl: "./expanded-image.component.scss",
+  imports: [ IconComponent ],
   changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class ExpandedImageComponent {
   @Input ( ) public imageURLs: string [ ] = [ ]
   @Input ( ) public index: number = 0
 
-  public readonly activeRouter: NgbActiveModal = inject ( NgbActiveModal )
+  @Output ( ) public closed = new EventEmitter<void> ( )
 
   public close ( ) {
-    this.activeRouter.dismiss ( )
+    this.closed.emit ( )
   }
 
   public nextImage ( ) {

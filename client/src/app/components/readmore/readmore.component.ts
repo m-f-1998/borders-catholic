@@ -4,6 +4,7 @@ import { ChangeDetectionStrategy, Component, input, InputSignal, signal, Writabl
   selector: "app-readmore",
   imports: [ ],
   templateUrl: "./readmore.component.html",
+  styleUrl: "./readmore.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class ReadmoreComponent {

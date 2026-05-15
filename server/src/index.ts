@@ -22,6 +22,7 @@ import cors from "@fastify/cors"
 import { router as staticRouter } from "./routes/static.js"
 import { router as driveRouter } from "./routes/drive.js"
 import { router as imagesRouter } from "./routes/images.js"
+import { router as mapsRouter } from "./routes/maps.js"
 
 import { randomBytes } from "crypto"
 
@@ -48,8 +49,13 @@ await app.register ( compress, {
 
 await app.register ( cors, {
   origin: ( origin, callback ) => {
-    const allowedOrigins = [ "http://localhost:4200", "http://localhost:3000", "https://borderscatholic.co.uk" ]
-    if ( !origin || allowedOrigins.includes ( origin ) ) {
+    const allowedOrigins = [
+      "http://localhost:4200",
+      "http://localhost:3000",
+      "https://borderscatholic.co.uk",
+      "https://dev.borderscatholic.co.uk"
+    ]
+    if ( !origin || allowedOrigins.some ( o => origin === o || origin.endsWith ( ".borderscatholic.co.uk" ) ) ) {
       callback ( null, true )
     } else {
       callback ( new Error ( "Not allowed by CORS" ), false )
@@ -183,6 +189,7 @@ app.addHook ( "onRequest", async request => {
 
 app.register ( imagesRouter, { prefix: "/api/img" } )
 app.register ( driveRouter, { prefix: "/api/drive" } )
+app.register ( mapsRouter, { prefix: "/api/maps" } )
 app.register ( staticRouter, { prefix: "/" } )
 
 console.log ( "Server is starting..." )

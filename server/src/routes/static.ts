@@ -20,11 +20,6 @@ export const router: FastifyPluginAsync = async app => {
       return rep.status ( 400 ).send ( "Bad Request" )
     }
 
-    if ( !process.env [ "GOOGLE_KEY" ] ) {
-      rep.status ( 500 ).send ( "Internal Server Error: GOOGLE_KEY is not set." )
-      return
-    }
-
     if ( existsSync ( address ) ) {
       try {
         await access ( address, constants.F_OK )
@@ -41,10 +36,16 @@ export const router: FastifyPluginAsync = async app => {
       }
     }
 
+    // Only HTML (SPA fallback) needs GOOGLE_KEY — warn but don't block
+    if ( !process.env [ "GOOGLE_KEY" ] ) {
+      console.warn ( "GOOGLE_KEY is not set — Google Maps will not load." )
+    }
+
     try {
       const indexContent = await fetchIndex ( req.cspNonce || "" )
       return rep.type ( "text/html" ).send ( indexContent )
-    } catch {
+    } catch ( err ) {
+      console.error ( err )
       return rep.status ( 500 ).send ( "Internal Server Error" )
     }
   } )

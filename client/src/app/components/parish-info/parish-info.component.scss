@@ -1,0 +1,81 @@
+.parish-info-section {
+  padding: 4rem 0;
+  background-color: var(--secondary-bg);
+  border-top: 1px solid var(--border-color);
+}
+
+.subsection-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--emphasis-color);
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #3399ff;
+  display: inline-block;
+}
+
+.priest-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background-color: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+}
+
+.priest-thumb {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top center;
+  flex-shrink: 0;
+  border: 2px solid #3399ff;
+}
+
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover span {
+    color: #3399ff;
+  }
+}
+
+.contact-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: rgba(51, 153, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3399ff;
+  flex-shrink: 0;
+}
+
+.address-note {
+  font-size: 0.8rem;
+  color: #3399ff;
+  font-style: italic;
+}
+
+.parish-map-wrapper {
+  margin-top: 2.5rem;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.parish-map-placeholder {
+  height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--tertiary-bg);
+}

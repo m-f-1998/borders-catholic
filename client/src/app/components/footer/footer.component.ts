@@ -8,14 +8,8 @@ import { ChangeDetectionStrategy, Component } from "@angular/core"
   changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class FooterComponent {
-  public currentDate = new Date ( )
-
   public copyrightNotice ( ) {
     const year = new Date ( ).getFullYear ( )
-    return `© ${year}. All rights reserved.`
-  }
-
-  public goToAuthor ( ) {
-    window.location.href = "https://matthewfrankland.co.uk"
+    return `© ${year}. All Rights Reserved.`
   }
 }

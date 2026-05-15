@@ -1,24 +1,9 @@
-.nav-link:hover:not(:disabled) {
-  color: black !important;
-  cursor: pointer;
-  background-color: rgba(black, 0.1) !important;
-}
-
-.nav-link:disabled {
-  color: rgba(white, 0.5) !important;
-  cursor: not-allowed;
-  background-color: transparent !important;
-}
-
 .nav-link.active {
-  color: black !important;
-  background-color: rgba(black, 0.1) !important;
-}
+  color: white;
+  background-color: rgba(255, 255, 255, 0.1);
 
-.nav-link {
-  color: white !important;
-}
-
-.navbar {
-  background-color: #3399ff !important;
+  app-icon {
+    opacity: 1 !important;
+    color: #3399ff;
+  }
 }
