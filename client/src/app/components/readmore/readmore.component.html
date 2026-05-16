@@ -3,7 +3,7 @@
     <h3 class="readmore-subtitle">{{subtitle()}}</h3>
   }
   <p class="readmore-content">
-    @if (content().length > this.MAXLENGTH && this.showReadMore()) {
+    @if (content().length > MAXLENGTH && showReadMore()) {
       @if (expanded()) {
         {{content()}}
       } @else {
@@ -18,7 +18,11 @@
   </p>
   @if (fileName() && fileURL()) {
     <div class="readmore-btn-wrapper">
-      <a class="btn btn-primary border-radius-100" [href]="fileURL()">{{fileName()}}</a>
+      <a class="btn btn-primary border-radius-100"
+        [href]="fileURL()"
+        [download]="fileName()"
+        target="_blank"
+        rel="noopener noreferrer">{{fileName()}}</a>
     </div>
   }
 </div>

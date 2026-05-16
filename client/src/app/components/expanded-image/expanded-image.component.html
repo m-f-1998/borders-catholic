@@ -1,25 +1,52 @@
 <div class="lightbox-overlay" (click)="close()">
-  <div class="lightbox-content" (click)="$event.stopPropagation()">
-    <button type="button" class="btn-close lightbox-close" aria-label="Close" (click)="close()"></button>
+  <div class="lightbox-dialog" role="dialog" aria-modal="true" [attr.aria-label]="'Gallery image ' + (currentIndex() + 1)" (click)="$event.stopPropagation()">
 
-    <img
-      [src]="'/api/img/' + imageURLs[index] + '?w=640&f=webp'"
-      [srcset]="
-        '/api/img/' + imageURLs[index] + '?w=320&f=webp 320w,' +
-        '/api/img/' + imageURLs[index] + '?w=640&f=webp 640w,' +
-        '/api/img/' + imageURLs[index] + '?w=1024&f=webp 1024w'
-      "
-      loading="lazy"
-      decoding="async"
-      [alt]="'Gallery Image ' + (index + 1) + ' - Expanded'"
-      class="lightbox-img"
-    />
+    <!-- Header -->
+    <div class="lightbox-header">
+      <span class="lightbox-counter">{{ currentIndex() + 1 }} / {{ imageURLs().length }}</span>
+      <button type="button" class="lightbox-close" aria-label="Close" (click)="close()">
+        <app-icon icon="xmark" />
+      </button>
+    </div>
 
-    <button class="lightbox-prev" type="button" aria-label="Previous" (click)="prevImage()">
-      <app-icon icon="chevron-left" />
-    </button>
-    <button class="lightbox-next" type="button" aria-label="Next" (click)="nextImage()">
-      <app-icon icon="chevron-right" />
-    </button>
+    <!-- Image -->
+    <div class="lightbox-body">
+      <button class="lightbox-arrow lightbox-arrow--left" type="button" aria-label="Previous" (click)="prevImage()">
+        <app-icon icon="chevron-left" />
+      </button>
+
+      <img
+        [src]="imgSrc(imageURLs()[currentIndex()], 1024)"
+        [srcset]="imgSrcset(imageURLs()[currentIndex()])"
+        sizes="(max-width: 600px) 100vw, 90vw"
+        decoding="async"
+        [alt]="'Gallery image ' + (currentIndex() + 1)"
+        class="lightbox-img"
+      />
+
+      <button class="lightbox-arrow lightbox-arrow--right" type="button" aria-label="Next" (click)="nextImage()">
+        <app-icon icon="chevron-right" />
+      </button>
+    </div>
+
+    <!-- Footer -->
+    <div class="lightbox-footer">
+      <a [href]="imgSrc(imageURLs()[currentIndex()], 1024)"
+         [download]="imageURLs()[currentIndex()].split('/').pop()"
+         class="lightbox-download">
+        <app-icon icon="download" /> Download
+      </a>
+    </div>
+
   </div>
+</div>
+
+<!-- Preload adjacent images -->
+<div class="hidden">
+  @if (imageURLs()[currentIndex() + 1]) {
+    <img [src]="imgSrc(imageURLs()[currentIndex() + 1], 1024)" alt="" />
+  }
+  @if (imageURLs()[currentIndex() - 1]) {
+    <img [src]="imgSrc(imageURLs()[currentIndex() - 1], 1024)" alt="" />
+  }
 </div>

@@ -8,8 +8,5 @@ import { ChangeDetectionStrategy, Component } from "@angular/core"
   changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class FooterComponent {
-  public copyrightNotice ( ) {
-    const year = new Date ( ).getFullYear ( )
-    return `© ${year}. All Rights Reserved.`
-  }
+  public readonly copyrightNotice = `© ${new Date ( ).getFullYear ( )}. All Rights Reserved.`
 }

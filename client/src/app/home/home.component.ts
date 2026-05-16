@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal, WritableSignal } from "@angular/core"
-import { GoogleMapsModule } from "@angular/google-maps"
 import { ExpandedImageComponent } from "@components/expanded-image/expanded-image.component"
 import { SundayMassTimesComponent } from "@components/sunday-mass-times/sunday-mass-times.component"
 import { HeaderComponent } from "@components/header/header.component"
@@ -13,7 +12,6 @@ import { ImgShimmerDirective } from "@app/directives/img-shimmer.directive"
 @Component ( {
   selector: "app-hawick-home",
   imports: [
-    GoogleMapsModule,
     ExpandedImageComponent,
     SundayMassTimesComponent,
     HeaderComponent,
@@ -28,9 +26,9 @@ import { ImgShimmerDirective } from "@app/directives/img-shimmer.directive"
   changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class HomeComponent {
-  public readonly GALLERY_LIMIT = 8
+  public readonly GalleryLimit = 8
 
-  public images: string[] = [
+  public readonly images: string[] = [
     "highlight.jpg",
     "header.jpg",
     "parish/parish-8.jpg",
@@ -47,7 +45,7 @@ export class HomeComponent {
   public expandedImageIndex: WritableSignal<number | null> = signal ( null )
   public showAllGallery: WritableSignal<boolean> = signal ( false )
   public visibleImages = computed ( ( ) =>
-    this.showAllGallery ( ) ? this.images : this.images.slice ( 0, this.GALLERY_LIMIT )
+    this.showAllGallery ( ) ? this.images : this.images.slice ( 0, this.GalleryLimit )
   )
 
   private readonly apiSvc: ApiService = inject ( ApiService )
@@ -61,7 +59,7 @@ export class HomeComponent {
     try {
       const response = ( await this.apiSvc.get ( "/api/drive/newsletter" ) ) as { url?: string }
       if ( response.url ) {
-        window.location.href = response.url
+        window.open ( response.url, "_blank", "noopener,noreferrer" )
       } else {
         this.openNewsletterArchive ( )
       }
@@ -74,6 +72,6 @@ export class HomeComponent {
   }
 
   public openNewsletterArchive ( ) {
-    window.location.href = "https://drive.google.com/drive/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG"
+    window.open ( "https://drive.google.com/drive/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG", "_blank", "noopener,noreferrer" )
   }
 }

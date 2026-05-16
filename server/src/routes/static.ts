@@ -1,5 +1,5 @@
-import { extname, join, resolve } from "path"
-import { createReadStream, existsSync } from "fs"
+import { extname, join, resolve, sep } from "path"
+import { createReadStream } from "fs"
 import { access, constants, stat, readFile } from "fs/promises"
 import { config } from "dotenv"
 import { FastifyPluginAsync } from "fastify"
@@ -10,23 +10,38 @@ config ( { path: envPath, quiet: true } )
 
 const clientFolder = join ( process.cwd ( ), "../client" )
 
+let cachedIndexTemplate: string | null = null
+
+const loadIndexTemplate = async ( ): Promise<string> => {
+  if ( cachedIndexTemplate ) return cachedIndexTemplate
+  const indexHTML = join ( clientFolder, "index.html" )
+  const idxExists = await access ( indexHTML, constants.F_OK ).then ( ( ) => true ).catch ( ( ) => false )
+  if ( !idxExists ) throw new Error ( "Index file not found" )
+  cachedIndexTemplate = await readFile ( indexHTML, "utf8" )
+  return cachedIndexTemplate
+}
+
 export const router: FastifyPluginAsync = async app => {
   app.get ( "*", async ( req, rep ) => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const asset = req.params as { "*": string }
     const address = resolve ( clientFolder, asset [ "*" ] )
 
-    if ( !address.startsWith ( clientFolder ) ) {
+    if ( address !== clientFolder && !address.startsWith ( clientFolder + sep ) ) {
       return rep.status ( 400 ).send ( "Bad Request" )
     }
 
-    if ( existsSync ( address ) ) {
+    const fileExists = await access ( address, constants.F_OK ).then ( ( ) => true ).catch ( ( ) => false )
+    if ( fileExists ) {
       try {
-        await access ( address, constants.F_OK )
         const stats = await stat ( address )
         if ( stats.isFile ( ) ) {
           const fileExt = extname ( address ).toLowerCase ( )
           const contentType = mime.getType ( fileExt ) || "application/octet-stream"
+          const isHashed = /\.[a-zA-Z0-9]{8,}\.(js|css|woff2?|ttf|eot|svg|png|jpg|ico)$/.test ( address )
+          if ( isHashed ) {
+            rep.header ( "cache-control", "public, max-age=31536000, immutable" )
+          }
           const stream = createReadStream ( address )
           return rep.type ( contentType ).send ( stream )
         }
@@ -43,6 +58,7 @@ export const router: FastifyPluginAsync = async app => {
 
     try {
       const indexContent = await fetchIndex ( req.cspNonce || "" )
+      rep.header ( "cache-control", "no-cache" )
       return rep.type ( "text/html" ).send ( indexContent )
     } catch ( err ) {
       console.error ( err )
@@ -51,19 +67,16 @@ export const router: FastifyPluginAsync = async app => {
   } )
 
   const fetchIndex = async ( nonce: string ) => {
-    const indexHTML = join ( clientFolder, "index.html" )
-    if ( existsSync ( indexHTML ) ) {
-      let html = await readFile ( indexHTML, "utf8" )
-      if ( nonce ) {
-        const metaTag = `<meta name="csp-nonce" content="${nonce}">`
-        html = html.replace ( "</head>", `${metaTag}</head>` )
-      }
-      html = loadGoogleMaps ( html, nonce )
-      html = injectGoogleTagManager ( html, nonce )
-      return html
-    } else {
-      throw new Error ( "Index file not found" )
+    let html = await loadIndexTemplate ( )
+    if ( nonce ) {
+      const metaTag = `<meta name="csp-nonce" content="${nonce}">`
+      html = html.replace ( "</head>", `${metaTag}</head>` )
     }
+    const heroPreload = `<link rel="preload" as="image" href="/api/img/new-header.jpg" fetchpriority="high">`
+    html = html.replace ( "</head>", `${heroPreload}</head>` )
+    html = loadGoogleMaps ( html, nonce )
+    html = injectGoogleTagManager ( html, nonce )
+    return html
   }
 }
 
@@ -81,27 +94,21 @@ const loadGoogleMaps = ( html: string, nonce: string ): string => {
   return html + script
 }
 
-// const injectScripts = ( html: string, nonce: string, url: string ): string => {
-//   const script = `<script nonce="${nonce}" type="module" async defer src="${url}"></script>`
-//   const headIndex = html.indexOf ( "</head>" )
-//   if ( headIndex !== -1 ) {
-//     return html.slice ( 0, headIndex ) + script + html.slice ( headIndex )
-//   }
-//   return html + script
-// }
 
 const injectGoogleTagManager = ( html: string, nonce: string ): string => {
-  const gtmScript = `<script nonce="${nonce}" async src="https://www.googletagmanager.com/gtag/js?id=G-8BJ3R2M3MR"></script>
+  const measurementId = process.env [ "GA_MEASUREMENT_ID" ] || "G-8BJ3R2M3MR"
+  const gtmScript = `<script nonce="${nonce}" async src="https://www.googletagmanager.com/gtag/js?id=${measurementId}"></script>
     <script nonce="${nonce}">
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-8BJ3R2M3MR');
+      gtag('config', '${measurementId}');
     </script>`
 
   const bodyIndex = html.indexOf ( "<body>" )
   if ( bodyIndex !== -1 ) {
-    return html.slice ( 0, bodyIndex ) + gtmScript + html.slice ( bodyIndex )
+    const afterBody = bodyIndex + "<body>".length
+    return html.slice ( 0, afterBody ) + gtmScript + html.slice ( afterBody )
   }
   return html + gtmScript
 }

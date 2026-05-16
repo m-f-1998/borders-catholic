@@ -18,7 +18,7 @@
                     /api/img/{{priest.image}}?w=160&f=webp 160w,
                     /api/img/{{priest.image}}?w=320&f=webp 320w
                 "
-                loading="lazy" decoding="async" alt="{{priest.name}}"
+                loading="lazy" decoding="async" sizes="80px" alt="{{priest.name}}"
                 class="priest-thumb" />
               <div>
                 <p class="font-semibold emphasis-color">{{priest.name}}</p>
@@ -47,7 +47,7 @@
           </a>
           @for (addr of address(); track addr.main) {
             @if (addr.mapsUrl) {
-              <a class="contact-row items-start" [href]="addr.mapsUrl" target="_blank" rel="noopener">
+              <a class="contact-row items-start" [href]="addr.mapsUrl" target="_blank" rel="noopener noreferrer">
                 <div class="contact-icon mt-1"><app-icon icon="map-pin" /></div>
                 <div class="flex flex-col gap-0.5">
                   <span class="emphasis-color text-sm leading-relaxed">{{addr.main}}</span>

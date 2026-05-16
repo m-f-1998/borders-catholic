@@ -8,7 +8,7 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
-      @for ( time of this.massTimes(); track time.church ) {
+      @for ( time of massTimes(); track time.church ) {
         <div class="mass-card">
           <div class="mass-card-icon">
             <app-icon icon="church" />
@@ -27,8 +27,8 @@
     </div>
 
     <div class="universalis-wrapper">
-      <a href="https://universalis.com/mass.htm" target="_blank" rel="noopener">
-        <img src="https://universalis.com/banner.gif" alt="Universalis Mass Readings" class="universalis-banner">
+      <a href="https://universalis.com/mass.htm" target="_blank" rel="noopener noreferrer">
+        <img src="https://universalis.com/banner.gif" alt="Universalis Mass Readings" loading="lazy" class="universalis-banner">
       </a>
     </div>
 

@@ -103,9 +103,6 @@
     .display-5 { font-size: calc(1.35rem + 0.65 * ((100vw - 20rem) / 28)); }
   }
 
-  .mbr-section-title, .mbr-section-subtitle { line-height: 1.3; }
-  .mbr-text { line-height: 1.7; }
-
   /* Buttons */
   .btn {
     font-weight: 600;
@@ -122,6 +119,11 @@
   .btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+
+  .btn:focus-visible {
+    outline: 2px solid #3399ff;
+    outline-offset: 2px;
   }
 
   .btn-primary,

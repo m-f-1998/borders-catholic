@@ -1,9 +1,9 @@
-<nav class="bg-gray-900/90 backdrop-blur-md border-b border-gray-800/60 w-full sticky top-0 z-50">
+<nav aria-label="Main navigation" class="bg-gray-900/90 backdrop-blur-md border-b border-gray-800/60 w-full sticky top-0 z-50">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
     <div class="flex items-center justify-between h-14">
 
       <button (click)="goTo('')" class="flex items-center gap-2.5 group cursor-pointer">
-        <app-icon icon="church" class="text-white text-lg" />
+        <img src="/favicon.ico" alt="Borders Catholic" class="w-7 h-7 rounded" />
         <span class="hidden sm:block text-gray-100 font-semibold text-sm tracking-wide group-hover:text-white transition-colors duration-200">
           Borders Catholic
         </span>
@@ -48,7 +48,12 @@
         </li>
       </ul>
 
-      <button (click)="toggleMenu()" class="sm:hidden p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/60 transition-all duration-200 focus:outline-none" aria-label="Toggle Navigation">
+      <button (click)="toggleMenu()"
+        id="mobile-menu-btn"
+        class="sm:hidden p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/60 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+        aria-label="Toggle Navigation"
+        aria-controls="mobile-menu"
+        [attr.aria-expanded]="!isMenuCollapsed()">
         @if (!isMenuCollapsed()) {
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -63,7 +68,7 @@
 
     <!-- Mobile menu -->
     @if (!isMenuCollapsed()) {
-      <div class="sm:hidden border-t border-gray-800/60 py-2">
+      <div id="mobile-menu" class="sm:hidden border-t border-gray-800/60 py-2">
         <ul class="flex flex-col gap-0.5">
           <li>
             <button (click)="goTo('')" [class.active]="activeSection() === 'hero'"

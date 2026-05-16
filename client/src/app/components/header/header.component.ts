@@ -1,5 +1,5 @@
 
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, input, InputSignal, NgZone, OnDestroy, signal, WritableSignal } from "@angular/core"
+import { afterNextRender, ChangeDetectionStrategy, Component, inject, OnDestroy, signal, WritableSignal } from "@angular/core"
 import { DOCUMENT } from "@angular/common"
 import { Router, RouterModule } from "@angular/router"
 import { IconComponent } from "@app/icon/icon.component"
@@ -17,18 +17,19 @@ type SectionId = typeof SECTION_ORDER [ number ]
   styleUrl: "./header.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush
 } )
-export class HeaderComponent implements AfterViewInit, OnDestroy {
-  public currentPage: InputSignal<string> = input<string> ( "" )
-
+export class HeaderComponent implements OnDestroy {
   public isMenuCollapsed: WritableSignal<boolean> = signal ( true )
   public activeSection: WritableSignal<SectionId> = signal ( "hero" )
 
   private observer: IntersectionObserver | null = null
   private readonly visible = new Set<SectionId> ()
 
-  public readonly router: Router = inject ( Router )
-  private readonly zone: NgZone = inject ( NgZone )
+  private readonly router: Router = inject ( Router )
   private readonly doc: Document = inject ( DOCUMENT )
+
+  public constructor ( ) {
+    afterNextRender ( ( ) => this.initScrollSpy ( ) )
+  }
 
   public goTo ( routerLink: string = "", id?: string ) {
     this.isMenuCollapsed.set ( true )
@@ -44,17 +45,13 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
     this.isMenuCollapsed.set ( !this.isMenuCollapsed ( ) )
   }
 
-  public ngAfterViewInit ( ) {
-    setTimeout ( ( ) => this.initScrollSpy ( ), 300 )
-  }
-
   public ngOnDestroy ( ) {
     this.observer?.disconnect ( )
   }
 
   private initScrollSpy ( ) {
     this.observer = new IntersectionObserver (
-      ( entries ) => {
+      entries => {
         entries.forEach ( entry => {
           const id = entry.target.id as SectionId
           if ( entry.isIntersecting ) {
@@ -65,7 +62,7 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
         } )
         const active = SECTION_ORDER.find ( id => this.visible.has ( id ) ) ?? "hero"
         if ( this.activeSection ( ) !== active ) {
-          this.zone.run ( ( ) => this.activeSection.set ( active ) )
+          this.activeSection.set ( active )
         }
       },
       { rootMargin: "-25% 0px -65% 0px", threshold: 0 }

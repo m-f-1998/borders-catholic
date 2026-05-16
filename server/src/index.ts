@@ -9,7 +9,7 @@ export const isDevMode = ( ) => process.env [ "DEV" ] === "true"
 import Fastify, { FastifyReply, FastifyRequest } from "fastify"
 import pino from "pino"
 import zlib from "zlib"
-import { IncomingMessage } from "http"
+// import { IncomingMessage } from "http" // Needed when nonce-based CSP callbacks are enabled
 
 import helmet from "@fastify/helmet"
 import compress from "@fastify/compress"
@@ -24,16 +24,14 @@ import { router as driveRouter } from "./routes/drive.js"
 import { router as imagesRouter } from "./routes/images.js"
 import { router as mapsRouter } from "./routes/maps.js"
 
-import { randomBytes } from "crypto"
+// Nonce generation — uncomment when ready to replace 'unsafe-inline' with nonce-based CSP.
+// Requires: (1) hook below enabled, (2) nonce callbacks in scriptSrcElem/styleSrc enabled,
+//           (3) Cloudflare Rocket Loader disabled or configured to pass nonces through.
+// import { randomBytes } from "crypto"
 
 const app = Fastify ( {
   logger: false,
-  // logger: {
-  //   level: isDevMode ( ) ? "debug" : "warn",
-  //   redact: { paths: [ "req.headers.authorization", "req.headers.cookie" ], censor: "[REDACTED]" }
-  // },
   trustProxy: "loopback",
-  // http2: true
 } )
 
 await app.register ( sensible )
@@ -41,7 +39,7 @@ await app.register ( cookie )
 await app.register ( formbody )
 
 await app.register ( compress, {
-  threshold: 1024 * 20,
+  threshold: 1024,
   zlibOptions: {
     flush: zlib.constants.Z_SYNC_FLUSH // Forces chunks to be sent immediately
   }
@@ -58,7 +56,7 @@ await app.register ( cors, {
     if ( !origin || allowedOrigins.some ( o => origin === o || origin.endsWith ( ".borderscatholic.co.uk" ) ) ) {
       callback ( null, true )
     } else {
-      callback ( new Error ( "Not allowed by CORS" ), false )
+      callback ( null, false )
     }
   },
   methods: [ "GET", "POST" ],
@@ -87,6 +85,10 @@ const logger: pino.Logger = pino ( {
 
 app.addHook ( "onRequest", async ( req, _reply ) => {
   req.startTime = Date.now ( )
+  // Uncomment to enable nonce-based CSP (see note above):
+  // const nonce = randomBytes ( 16 ).toString ( "base64" )
+  // req.cspNonce = nonce
+  // ;( req.raw as IncomingMessage ).cspNonce = nonce
 } )
 
 // Add hook to flag slow requests
@@ -106,24 +108,16 @@ await app.register ( helmet, {
       ],
       styleSrc: [
         "'self'",
-        // ( req: IncomingMessage ) => {
-        //   if ( req.cspNonce ) {
-        //     return `'nonce-${req.cspNonce}'`
-        //   }
-        //   return ""
-        // },
+        // Uncomment below and remove 'unsafe-inline' to enable nonce-based CSP:
+        // ( req: IncomingMessage ) => req.cspNonce ? `'nonce-${req.cspNonce}'` : "",
         "'unsafe-inline'",
         "https://fonts.googleapis.com"
       ],
       scriptSrcElem: [
         "'self'",
+        // Uncomment below and remove 'unsafe-inline' to enable nonce-based CSP:
+        // ( req: IncomingMessage ) => req.cspNonce ? `'nonce-${req.cspNonce}'` : "",
         "'unsafe-inline'",
-        // ( req: IncomingMessage ) => {
-        //   if ( req.cspNonce ) {
-        //     return `'nonce-${req.cspNonce}'`
-        //   }
-        //   return ""
-        // },
         "https://www.googletagmanager.com",
         "https://maps.googleapis.com"
       ],
@@ -145,6 +139,10 @@ await app.register ( helmet, {
       frameSrc: [
         "'self'",
         "https://www.google.com"
+      ],
+      fontSrc: [
+        "'self'",
+        "data:"
       ]
     }
   },
@@ -180,12 +178,6 @@ export const logResponse = ( req: FastifyRequest, reply: FastifyReply, isProxy =
 
   logger.info ( body )
 }
-
-app.addHook ( "onRequest", async request => {
-  const nonce = randomBytes ( 16 ).toString ( "base64" )
-  request.cspNonce = nonce
-  ;( request.raw as IncomingMessage ).cspNonce = nonce
-} )
 
 app.register ( imagesRouter, { prefix: "/api/img" } )
 app.register ( driveRouter, { prefix: "/api/drive" } )

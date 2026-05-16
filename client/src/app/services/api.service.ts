@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http"
 import { inject, Injectable, isDevMode } from "@angular/core"
+import { firstValueFrom } from "rxjs"
 import { parse } from "date-fns"
 
 @Injectable ( {
@@ -8,7 +9,14 @@ import { parse } from "date-fns"
 export class ApiService {
   private readonly httpClient: HttpClient = inject ( HttpClient )
 
-  public get ( path: string, body: any = { },  ) {
+  public get ( path: string, body: Record<string, unknown> = { } ) {
+    const address = ( isDevMode ( ) ? "http://localhost:3000" : "" ) + path
+    return firstValueFrom (
+      this.httpClient.get ( address, { params: body as any } )
+    ).then ( res => this.parseObj ( res ) )
+  }
+
+  public post ( path: string, body: Record<string, unknown> | FormData = { } ) {
     const address = ( isDevMode ( ) ? "http://localhost:3000" : "" ) + path
     let headers = new HttpHeaders ( )
 
@@ -16,68 +24,40 @@ export class ApiService {
       headers = headers.append ( "Content-Type", "application/json" )
     }
 
-    return new Promise ( ( resolve, reject ) => {
-      this.httpClient.get ( address, {
-        params: body,
-        headers,
-        responseType: address.endsWith ( "/asset.php" ) ? "blob" : "json"
-      } as object ).subscribe ( {
-        next: response => {
-          resolve ( this.parseObj ( response ) )
-        },
-        error: error => {
-          reject ( error )
-        }
-      } )
-    } )
+    return firstValueFrom (
+      this.httpClient.post ( address, body, { headers } )
+    ).then ( res => this.parseObj ( res ) )
   }
 
-  public post ( path: string, body: any = { } ) {
-    const address = ( isDevMode ( ) ? "http://localhost:3000" : "" ) + path
-    let headers = new HttpHeaders ( )
-
-    if ( !( body instanceof FormData ) ) {
-      headers = headers.append ( "Content-Type", "application/json" )
+  private parseObj ( obj: unknown ): unknown {
+    if ( Array.isArray ( obj ) ) {
+      return obj.map ( x => this.parseObj ( x ) )
     }
-
-    return new Promise ( ( resolve, reject ) => {
-      this.httpClient.post ( address, body, {
-        headers,
-        responseType: address.endsWith ( "/asset.php" ) ? "blob" : "json"
-      } as object ).subscribe ( {
-        next: response => {
-          resolve ( this.parseObj ( response ) )
-        },
-        error: error => {
-          reject ( error )
-        }
-      } )
-    } )
-  }
-
-  private parseObj ( obj: any ): any {
-    const res = obj
-    if ( res instanceof Object ) {
+    if ( obj !== null && typeof obj === "object" ) {
+      const res: Record<string, unknown> = { ...( obj as Record<string, unknown> ) }
       for ( const key of Object.keys ( res ) ) {
         if ( res [ key ] ) {
           if ( Array.isArray ( res [ key ] ) ) {
-            res [ key ] = res [ key ].map ( ( x: any ) => this.parseObj ( x ) )
-          } else if ( typeof obj [ key ] === "object" ) {
+            res [ key ] = ( res [ key ] as unknown[] ).map ( x => this.parseObj ( x ) )
+          } else if ( typeof res [ key ] === "object" ) {
             res [ key ] = this.parseObj ( res [ key ] )
-          } else if ( this.isNumber ( res [ key ] ) ) {
+          } else if ( this.isNumber ( res [ key ] as string ) ) {
             res [ key ] = Number ( res [ key ] )
-          } else if ( this.isBool ( res [ key ] ) ) {
-            res [ key ] = Boolean ( res [ key ] )
+          } else if ( this.isBool ( res [ key ] as string ) ) {
+            res [ key ] = String ( res [ key ] ).toUpperCase ( ) === "TRUE"
+          } else {
+            res [ key ] = this.checkDate ( res [ key ] as string )
           }
-          res [ key ] = this.checkDate ( res [ key ] )
         }
       }
+      return res
     }
-    return res
+    return obj
   }
 
   private isBool = ( value: string ): boolean => {
-    return String ( value ).toUpperCase ( ) === "TRUE" || String ( value ).toUpperCase ( ) === "FALSE"
+    const upper = String ( value ).toUpperCase ( )
+    return upper === "TRUE" || upper === "FALSE"
   }
 
   private isNumber = ( value: string ): boolean => {

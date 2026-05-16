@@ -18,7 +18,7 @@ export class ErrorComponent {
 
   public socialLinks: Array<{ url: string; icon: SolidIcon | BrandIcon; class: string; tooltip: string }> = [
     {
-      url: "https://facebook.com/ss.mary.david",
+      url: "https://www.facebook.com/profile.php?id=100079676379609",
       icon: "facebook",
       class: "btn btn-lg btn-icon facebook-link",
       tooltip: "Contact us on Facebook"

@@ -1,4 +1,4 @@
-<app-header currentPage="" />
+<app-header />
 
 @if (expandedImageIndex() !== null) {
   <app-expanded-image
@@ -22,7 +22,7 @@
         <br /><br />May God bless you and we hope you will visit one of our churches soon.
       </p>
       <div class="social-list">
-        <a href="https://www.facebook.com/profile.php?id=100079676379609" target="_blank" class="soc-item" aria-label="Facebook">
+        <a href="https://www.facebook.com/profile.php?id=100079676379609" target="_blank" rel="noopener noreferrer" class="soc-item" aria-label="Facebook">
           <app-icon icon="facebook" class="text-light" />
         </a>
         <a href="mailto:catholic363@gmail.com" class="soc-item" aria-label="Email">
@@ -30,7 +30,7 @@
         </a>
       </div>
       <div class="hero-actions">
-        <button class="btn btn-primary border-radius-100" (click)="openNewsletter()">
+        <button class="btn btn-primary border-radius-100" [disabled]="loadingNewsletter()" (click)="openNewsletter()">
           @if (loadingNewsletter()) {
             <app-icon icon="spinner" iconAnimation="spin" />
           } @else {
@@ -96,21 +96,24 @@
       <p class="display-4 mt-3 emphasis-color">A glimpse into our parish life and community</p>
     </div>
     <div class="gallery-grid">
-      @for ( url of visibleImages(); track $index ) {
-        <div class="gallery-card" (click)="expandImage($index)">
-          <img appShimmer
-            src="/api/img/{{url}}?w=640&f=webp"
-            srcset="
-              /api/img/{{url}}?w=320&f=webp 320w,
-              /api/img/{{url}}?w=640&f=webp 640w
-            "
-            loading="lazy" decoding="async"
-            alt="Gallery Image {{ $index + 1 }}"
-            class="gallery-img" />
+      @for ( url of visibleImages(); track url ) {
+        <div class="gallery-card">
+          <button class="gallery-card-btn" (click)="expandImage($index)" [attr.aria-label]="'View gallery image ' + ($index + 1)">
+            <img appShimmer
+              src="/api/img/{{url}}?w=640&f=webp"
+              srcset="
+                /api/img/{{url}}?w=320&f=webp 320w,
+                /api/img/{{url}}?w=640&f=webp 640w
+              "
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              loading="lazy" decoding="async"
+              alt="Gallery Image {{ $index + 1 }}"
+              class="gallery-img" />
+          </button>
         </div>
       }
     </div>
-    @if (images.length > GALLERY_LIMIT) {
+    @if (images.length > GalleryLimit) {
       <div class="gallery-toggle-wrapper">
         <button class="gallery-toggle btn btn-outline border-radius-100" (click)="showAllGallery.update(v => !v)">
           {{ showAllGallery() ? 'Show Less' : 'Show All (' + images.length + ' photos)' }}

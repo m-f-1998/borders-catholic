@@ -1,21 +1,31 @@
-import { AfterViewInit, Directive, ElementRef, HostListener, inject } from "@angular/core"
+import { AfterViewInit, Directive, ElementRef, inject } from "@angular/core"
 
 @Directive ( {
   selector: "img[appShimmer]",
-  standalone: true
+  host: {
+    "(load)": "onLoad()",
+    "(error)": "onError()"
+  }
 } )
 export class ImgShimmerDirective implements AfterViewInit {
   private el = inject ( ElementRef<HTMLImageElement> )
 
-  @HostListener ( "load" )
-  @HostListener ( "error" )
-  onLoad ( ) {
+  public onLoad ( ) {
     this.el.nativeElement.classList.remove ( "shimmer-loading" )
   }
 
-  ngAfterViewInit ( ) {
+  public onError ( ) {
+    this.el.nativeElement.classList.remove ( "shimmer-loading" )
+    this.el.nativeElement.classList.add ( "img-error" )
+  }
+
+  public ngAfterViewInit ( ) {
     const img = this.el.nativeElement
-    if ( img.complete && img.naturalWidth > 0 ) return
+    if ( img.complete && img.naturalWidth > 0 ) return  // already loaded fine
+    if ( img.complete && img.naturalWidth === 0 ) {      // already errored before directive ran
+      img.classList.add ( "img-error" )
+      return
+    }
     img.classList.add ( "shimmer-loading" )
   }
 }
