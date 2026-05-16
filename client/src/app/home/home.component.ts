@@ -29,16 +29,17 @@ export class HomeComponent {
   public readonly GalleryLimit = 8
 
   public readonly images: string[] = [
+    "parish/parish-1.jpg",
+    "parish/parish-2.jpg",
     "highlight.jpg",
-    "header.jpg",
+    "parish/parish-10.jpg",
+    "parish/parish-9.jpg",
     "parish/parish-8.jpg",
     "parish/parish-6.jpg",
     "parish/parish-5.jpg",
     "parish/parish-4.jpg",
     "parish/parish-7.jpg",
-    "parish/parish-3.jpg",
-    "parish/parish-2.jpg",
-    "parish/parish-1.jpg"
+    "parish/parish-3.jpg"
   ]
 
   public loadingNewsletter: WritableSignal<boolean> = signal ( false )
