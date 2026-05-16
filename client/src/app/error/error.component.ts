@@ -1,60 +1,45 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core"
 import { ActivatedRoute, Router } from "@angular/router"
 import { IconComponent } from "@app/icon/icon.component"
-import { BrandIcon, SolidIcon } from "@app/icon/icon.registry"
+import { HeaderComponent } from "@components/header/header.component"
+import { FooterComponent } from "@components/footer/footer.component"
+
+const ERROR_MAP: Record<string, { title: string; description: string }> = {
+  "400": { title: "Bad Request",           description: "The request couldn't be understood by the server." },
+  "401": { title: "Unauthorised",          description: "You're not authorised to view this page." },
+  "403": { title: "Forbidden",             description: "Access to this page has been denied." },
+  "404": { title: "Page Not Found",        description: "The page you're looking for doesn't exist or has been moved." },
+  "500": { title: "Internal Server Error", description: "Something went wrong on our end. Please try again shortly." },
+}
 
 @Component ( {
   selector: "app-error",
   imports: [
-    IconComponent
+    IconComponent,
+    HeaderComponent,
+    FooterComponent
   ],
   templateUrl: "./error.component.html",
   styleUrl: "./error.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush
 } )
 export class ErrorComponent {
-  public error = "500 Internal Server Error"
-  public description = "Something went wrong."
-
-  public socialLinks: Array<{ url: string; icon: SolidIcon | BrandIcon; class: string; tooltip: string }> = [
-    {
-      url: "https://www.facebook.com/profile.php?id=100079676379609",
-      icon: "facebook",
-      class: "btn btn-lg btn-icon facebook-link",
-      tooltip: "Contact us on Facebook"
-    },
-  ]
+  public code: string
+  public title: string
+  public description: string
 
   private readonly route: ActivatedRoute = inject ( ActivatedRoute )
   private readonly router: Router = inject ( Router )
 
   public constructor ( ) {
-    this.error = this.route.snapshot.paramMap.get ( "code" ) ?? "500"
-    if ( isNaN ( Number ( this.error ) ) ) {
-      this.error = "404"
+    let code = this.route.snapshot.paramMap.get ( "code" ) ?? "500"
+    if ( isNaN ( Number ( code ) ) ) {
+      code = "404"
       this.router.navigate ( [ "/error/404" ] )
     }
-    switch ( this.error ) {
-      case "400":
-        this.error = "400 Bad Request"
-        this.description = "Something's not right."
-        break
-      case "401":
-        this.error = "401 Unauthorized"
-        this.description = "Client not authorized."
-        break
-      case "403":
-        this.error = "403 Forbidden"
-        this.description = "Access denied."
-        break
-      case "404":
-        this.error = "404 Not Found"
-        this.description = "Page not found."
-        break
-      default:
-        this.error = "500 Internal Server Error"
-        this.description = "Something went wrong."
-        break
-    }
+    const entry = ERROR_MAP [ code ] ?? ERROR_MAP [ "500" ]
+    this.code = code in ERROR_MAP ? code : "500"
+    this.title = entry.title
+    this.description = entry.description
   }
 }

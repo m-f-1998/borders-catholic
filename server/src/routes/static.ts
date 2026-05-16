@@ -4,6 +4,7 @@ import { access, constants, stat, readFile } from "fs/promises"
 import { config } from "dotenv"
 import { FastifyPluginAsync } from "fastify"
 import mime from "mime"
+import { isDevMode } from "../index.js"
 
 const envPath = resolve ( process.cwd ( ), ".env" )
 config ( { path: envPath, quiet: true } )
@@ -75,7 +76,7 @@ export const router: FastifyPluginAsync = async app => {
     const heroPreload = `<link rel="preload" as="image" href="/api/img/new-header.jpg" fetchpriority="high">`
     html = html.replace ( "</head>", `${heroPreload}</head>` )
     html = loadGoogleMaps ( html, nonce )
-    html = injectGoogleTagManager ( html, nonce )
+    if ( !isDevMode ( ) ) html = injectGoogleTagManager ( html, nonce )
     return html
   }
 }

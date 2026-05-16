@@ -9,7 +9,7 @@ export const isDevMode = ( ) => process.env [ "DEV" ] === "true"
 import Fastify, { FastifyReply, FastifyRequest } from "fastify"
 import pino from "pino"
 import zlib from "zlib"
-// import { IncomingMessage } from "http" // Needed when nonce-based CSP callbacks are enabled
+import { IncomingMessage } from "http"
 
 import helmet from "@fastify/helmet"
 import compress from "@fastify/compress"
@@ -24,10 +24,7 @@ import { router as driveRouter } from "./routes/drive.js"
 import { router as imagesRouter } from "./routes/images.js"
 import { router as mapsRouter } from "./routes/maps.js"
 
-// Nonce generation — uncomment when ready to replace 'unsafe-inline' with nonce-based CSP.
-// Requires: (1) hook below enabled, (2) nonce callbacks in scriptSrcElem/styleSrc enabled,
-//           (3) Cloudflare Rocket Loader disabled or configured to pass nonces through.
-// import { randomBytes } from "crypto"
+import { randomBytes } from "crypto"
 
 const app = Fastify ( {
   logger: false,
@@ -85,10 +82,9 @@ const logger: pino.Logger = pino ( {
 
 app.addHook ( "onRequest", async ( req, _reply ) => {
   req.startTime = Date.now ( )
-  // Uncomment to enable nonce-based CSP (see note above):
-  // const nonce = randomBytes ( 16 ).toString ( "base64" )
-  // req.cspNonce = nonce
-  // ;( req.raw as IncomingMessage ).cspNonce = nonce
+  const nonce = randomBytes ( 16 ).toString ( "base64" )
+  req.cspNonce = nonce
+  ;( req.raw as IncomingMessage ).cspNonce = nonce
 } )
 
 // Add hook to flag slow requests
@@ -108,18 +104,15 @@ await app.register ( helmet, {
       ],
       styleSrc: [
         "'self'",
-        // Uncomment below and remove 'unsafe-inline' to enable nonce-based CSP:
-        // ( req: IncomingMessage ) => req.cspNonce ? `'nonce-${req.cspNonce}'` : "",
-        "'unsafe-inline'",
+        ( req: IncomingMessage ) => req.cspNonce ? `'nonce-${req.cspNonce}'` : "",
         "https://fonts.googleapis.com"
       ],
       scriptSrcElem: [
         "'self'",
-        // Uncomment below and remove 'unsafe-inline' to enable nonce-based CSP:
-        // ( req: IncomingMessage ) => req.cspNonce ? `'nonce-${req.cspNonce}'` : "",
-        "'unsafe-inline'",
+        ( req: IncomingMessage ) => req.cspNonce ? `'nonce-${req.cspNonce}'` : "",
         "https://www.googletagmanager.com",
-        "https://maps.googleapis.com"
+        "https://maps.googleapis.com",
+        "https://static.cloudflareinsights.com"
       ],
       imgSrc: [
         "'self'",
@@ -134,7 +127,8 @@ await app.register ( helmet, {
         "https://www.googleapis.com",
         "https://\*.google-analytics.com",
         "https://\*.google.com",
-        "https://maps.googleapis.com"
+        "https://maps.googleapis.com",
+        "https://cloudflareinsights.com"
       ],
       frameSrc: [
         "'self'",
@@ -142,7 +136,8 @@ await app.register ( helmet, {
       ],
       fontSrc: [
         "'self'",
-        "data:"
+        "data:",
+        "https://fonts.gstatic.com"
       ]
     }
   },
