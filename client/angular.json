@@ -17,23 +17,10 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "stylePreprocessorOptions": {
-              "sass": {
-                "silenceDeprecations": [
-                  "import",
-                  "global-builtin",
-                  "color-functions",
-                  "abs-percent",
-                  "if-function"
-                ]
-              }
-            },
             "outputPath": "dist",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": [
-              "@angular/localize/init"
-            ],
+            "polyfills": [],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -43,7 +30,7 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.css"
             ]
           },
           "configurations": {

@@ -1,0 +1,43 @@
+.readmore-block {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-color);
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+}
+
+.readmore-subtitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--emphasis-color);
+  margin-bottom: 0.5rem;
+}
+
+.readmore-content {
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: var(--emphasis-color);
+  opacity: 0.85;
+  white-space: pre-line;
+  margin-bottom: 0;
+}
+
+.readmore-toggle {
+  display: inline;
+  margin-left: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #3399ff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+
+  &:hover { text-decoration: underline; }
+}
+
+.readmore-btn-wrapper {
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}

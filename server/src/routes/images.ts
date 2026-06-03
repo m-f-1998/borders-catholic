@@ -1,5 +1,5 @@
 import { config } from "dotenv"
-import { join, normalize, resolve } from "path"
+import { basename, join, normalize, resolve, sep } from "path"
 
 const envPath = resolve ( process.cwd ( ), ".env" )
 config ( { path: envPath, quiet: true } )
@@ -7,13 +7,20 @@ config ( { path: envPath, quiet: true } )
 const isDevMode = ( ) => process.env [ "DEV" ] === "true"
 
 import sharp from "sharp"
-import { existsSync, statSync } from "fs"
+import { stat } from "fs/promises"
 import { FastifyPluginAsync } from "fastify"
 import { createHash } from "crypto"
 
 const IMAGE_DIR = join ( process.cwd ( ), "../", "assets", "img", )
 
 const SUPPORTED_FORMATS = [ "webp", "avif", "jpeg", "png" ]
+
+const MIME_TYPES: Record<string, string> = {
+  webp: "image/webp",
+  avif: "image/avif",
+  jpeg: "image/jpeg",
+  png: "image/png",
+}
 
 sharp.cache ( !isDevMode ( ) )
 sharp.concurrency ( isDevMode ( ) ? 1 : 4 )
@@ -31,22 +38,47 @@ export const router: FastifyPluginAsync = async app => {
 
       const { w, h, f, q } = req.query as { w?: string; h?: string; f?: string; q?: string }
 
-      const width = w ? parseInt ( w as string, 10 ) : null
-      const height = h ? parseInt ( h as string, 10 ) : null
-      const format = SUPPORTED_FORMATS.includes ( f as string ) ? ( f as string ) : "webp"
-      const quality = q ? parseInt ( q as string, 10 ) : 80
+      const MAX_DIM = 3840
+      const clampDim = ( v: string | undefined ): number | undefined => {
+        if ( !v ) return undefined
+        const n = parseInt ( v, 10 )
+        if ( isNaN ( n ) || n <= 0 ) return undefined
+        return Math.min ( n, MAX_DIM )
+      }
+      const parseIntSafe = ( v: string | undefined, fallback: number ) => {
+        const n = v ? parseInt ( v, 10 ) : NaN
+        return isNaN ( n ) ? fallback : n
+      }
+      const width   = clampDim ( w )
+      const height  = clampDim ( h )
+      const format  = SUPPORTED_FORMATS.includes ( f as string ) ? ( f as string ) : "webp"
+      const quality = Math.min ( Math.max ( parseIntSafe ( q, 80 ), 1 ), 100 )
 
       const safeFilename = normalize ( filename ).replace ( /^(\.\.(\/|\\|$))+/, "" )
       const inputPath = join ( IMAGE_DIR, safeFilename )
-      if ( !existsSync ( inputPath ) ) {
+
+      if ( !inputPath.startsWith ( IMAGE_DIR + sep ) ) {
+        return rep.status ( 403 ).send ( "Forbidden" )
+      }
+
+      const fileStats = await stat ( inputPath ).catch ( ( ) => null )
+      if ( !fileStats ) {
         console.log ( "Image not found:", inputPath )
         return rep.status ( 404 ).send ( "Image not found" )
       }
 
-      const stats = statSync ( inputPath )
-      const lastModified = stats.mtime.toUTCString ( )
-      const etagBase = `${stats.mtimeMs}-${stats.size}-${width}-${height}-${format}-${quality}`
+      const lastModified = fileStats.mtime.toUTCString ( )
+      const etagBase = `${fileStats.mtimeMs}-${fileStats.size}-${width}-${height}-${format}-${quality}`
       const etag = createHash ( "sha1" ).update ( etagBase ).digest ( "hex" )
+
+      const ifNoneMatch = req.headers [ "if-none-match" ]
+      if ( ifNoneMatch === `"${etag}"` ) {
+        return rep.status ( 304 ).send ( )
+      }
+      const ifModifiedSince = req.headers [ "if-modified-since" ]
+      if ( ifModifiedSince && new Date ( ifModifiedSince ) >= fileStats.mtime ) {
+        return rep.status ( 304 ).send ( )
+      }
 
       let transformer = sharp ( inputPath )
         .resize ( width, height, { fit: "inside", withoutEnlargement: true } )
@@ -65,13 +97,15 @@ export const router: FastifyPluginAsync = async app => {
           transformer = transformer.webp ( { quality } )
       }
 
-      rep.type ( format )
-      rep.header ( "content-length", ( await transformer.toBuffer ( ) ).length )
-      rep.header ( "content-disposition", `inline; filename="${filename.replace ( /"/g, "" ).replace ( /\s/g, "_" )}"` )
+      const buffer = await transformer.toBuffer ( )
+      const safeName = basename ( filename ).replace ( /"/g, "" ).replace ( /\s/g, "_" )
+      rep.type ( MIME_TYPES [ format ] ?? "application/octet-stream" )
+      rep.header ( "content-length", buffer.length )
+      rep.header ( "content-disposition", `inline; filename="${safeName}"` )
       rep.header ( "cache-control", "public, max-age=31536000" )
       rep.header ( "last-modified", lastModified )
-      rep.header ( "etag", etag )
-      return rep.send ( await transformer.toBuffer ( ) )
+      rep.header ( "etag", `"${etag}"` )
+      return rep.send ( buffer )
     } catch ( err ) {
       console.error ( err )
       return rep.status ( 500 ).send ( "Error processing image" )

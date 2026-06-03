@@ -1,33 +1,31 @@
-import { Injectable, isDevMode } from "@angular/core"
-import { environment } from "../../../environments/environment"
+import { Injectable } from "@angular/core"
 
 @Injectable ( {
   providedIn: "root"
 } )
 export class MapsService {
-  private loaded = false
   private loadingPromise: Promise<void> | null = null
 
   public load ( ): Promise<void> {
-    if ( !isDevMode ( ) ) {
-      return Promise.resolve ( )
-    }
-    if ( this.loaded ) return Promise.resolve ( )
     if ( this.loadingPromise ) return this.loadingPromise
 
-    this.loadingPromise = new Promise ( ( resolve, reject ) => {
-      const script = document.createElement ( "script" )
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.googleMapsKey}&v=weekly`
-      script.async = true
-      script.defer = true
+    if ( ( window as any ).google?.maps ) return Promise.resolve ( )
 
-      script.onload = ( ) => {
-        this.loaded = true
-        resolve ( )
-      }
-      script.onerror = ( ) => reject ( new Error ( "Google Maps API failed to load" ) )
-
-      document.head.appendChild ( script )
+    // The Maps bootstrap script is always injected server-side into the HTML.
+    // Poll until the google.maps namespace is available (max 5s).
+    this.loadingPromise = new Promise<void> ( ( resolve, reject ) => {
+      const start = Date.now ( )
+      const poll = setInterval ( ( ) => {
+        if ( ( window as any ).google?.maps ) {
+          clearInterval ( poll )
+          this.loadingPromise = null
+          resolve ( )
+        } else if ( Date.now ( ) - start > 5000 ) {
+          clearInterval ( poll )
+          this.loadingPromise = null
+          reject ( new Error ( "Google Maps API timed out" ) )
+        }
+      }, 100 )
     } )
 
     return this.loadingPromise

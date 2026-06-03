@@ -1,30 +1,52 @@
-<div class="modal-header">
-  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="this.close()"></button>
-</div>
-<div class="modal-body p-0">
-  <div id="images" class="carousel slide">
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <img src="/api/img/{{this.imageURLs[this.index]}}?w=640&f=webp"
-          srcset="
-            /api/img/{{this.imageURLs[this.index]}}?w=320&f=webp 320w,
-            /api/img/{{this.imageURLs[this.index]}}?w=640&f=webp 640w,
-            /api/img/{{this.imageURLs[this.index]}}?w=1024&f=webp 1024w
-          "
-          loading="lazy"
-          decoding="async"
-          alt="Gallery Image {{ this.index + 1 }} - Expanded"
-          class="img-big d-block w-100"
-        />
-      </div>
+<div class="lightbox-overlay" (click)="close()">
+  <div class="lightbox-dialog" role="dialog" aria-modal="true" [attr.aria-label]="'Gallery image ' + (currentIndex() + 1)" (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="lightbox-header">
+      <span class="lightbox-counter">{{ currentIndex() + 1 }} / {{ imageURLs().length }}</span>
+      <button type="button" class="lightbox-close" aria-label="Close" (click)="close()">
+        <app-icon icon="xmark" />
+      </button>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#images" data-bs-slide="prev" (click)="prevImage()">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#images" data-bs-slide="next" (click)="nextImage()">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
+
+    <!-- Image -->
+    <div class="lightbox-body">
+      <button class="lightbox-arrow lightbox-arrow--left" type="button" aria-label="Previous" (click)="prevImage()">
+        <app-icon icon="chevron-left" />
+      </button>
+
+      <img
+        [src]="imgSrc(imageURLs()[currentIndex()], 1024)"
+        [srcset]="imgSrcset(imageURLs()[currentIndex()])"
+        sizes="(max-width: 600px) 100vw, 90vw"
+        decoding="async"
+        [alt]="'Gallery image ' + (currentIndex() + 1)"
+        class="lightbox-img"
+      />
+
+      <button class="lightbox-arrow lightbox-arrow--right" type="button" aria-label="Next" (click)="nextImage()">
+        <app-icon icon="chevron-right" />
+      </button>
+    </div>
+
+    <!-- Footer -->
+    <div class="lightbox-footer">
+      <a [href]="imgSrc(imageURLs()[currentIndex()], 1024)"
+         [download]="imageURLs()[currentIndex()].split('/').pop()"
+         class="lightbox-download">
+        <app-icon icon="download" /> Download
+      </a>
+    </div>
+
   </div>
+</div>
+
+<!-- Preload adjacent images -->
+<div class="hidden">
+  @if (imageURLs()[currentIndex() + 1]) {
+    <img [src]="imgSrc(imageURLs()[currentIndex() + 1], 1024)" alt="" />
+  }
+  @if (imageURLs()[currentIndex() - 1]) {
+    <img [src]="imgSrc(imageURLs()[currentIndex() - 1], 1024)" alt="" />
+  }
 </div>

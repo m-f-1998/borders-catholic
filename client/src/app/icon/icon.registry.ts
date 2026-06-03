@@ -1,36 +1,52 @@
 import {
   faCalendar,
+  faBars,
+  faChevronDown,
+  faChevronLeft,
+  faChevronRight,
   faChurch,
+  faCross,
+  faDownload,
+  faDroplet,
   faEnvelope,
-  faEnvelopeOpen,
   faExclamationTriangle,
   faGlobe,
+  faHandsPraying,
   faHome,
+  faImages,
   faMapPin,
-  faMobileAlt,
   faPhone,
-  faSpinner
+  faRing,
+  faSpinner,
+  faXmark
 } from "@fortawesome/free-solid-svg-icons"
-import { faFacebook, faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons"
+import { faFacebook } from "@fortawesome/free-brands-svg-icons"
 
 const icons = {
   "fas": {
+    "bars": faBars,
+    "chevron-down": faChevronDown,
+    "chevron-left": faChevronLeft,
+    "chevron-right": faChevronRight,
     "church": faChurch,
+    "cross": faCross,
+    "download": faDownload,
+    "droplet": faDroplet,
     "envelope": faEnvelope,
-    "envelope-open": faEnvelopeOpen,
     "exclamation-triangle": faExclamationTriangle,
     "globe": faGlobe,
+    "hands-praying": faHandsPraying,
     "home": faHome,
+    "images": faImages,
     "map-pin": faMapPin,
-    "mobile-alt": faMobileAlt,
     "phone": faPhone,
+    "ring": faRing,
     "spinner": faSpinner,
+    "xmark": faXmark,
     "calendar": faCalendar
   },
   "fab": {
-    "facebook": faFacebook,
-    "github": faGithub,
-    "linkedin": faLinkedin
+    "facebook": faFacebook
   }
 }
 

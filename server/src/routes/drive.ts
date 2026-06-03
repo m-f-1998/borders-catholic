@@ -25,24 +25,30 @@ const listFiles = async ( parentId: string ) => {
   if ( !parentId ) return [ ]
 
   const referrer = isDevMode ( ) ? "http://localhost:3000" : "https://borderscatholic.co.uk"
+  const drive = google.drive ( { version: "v3", auth: process.env [ "GOOGLE_KEY" ], referrer } )
 
-  const drive = google.drive ( {
-    version: "v3",
-    auth: process.env [ "GOOGLE_KEY" ],
-    referrer
-  } )
+  const results: Array<{ id?: string | null; name?: string | null }> = []
+  let pageToken: string | undefined
 
-  const response = await drive.files.list ( {
-    q: `'${parentId}' in parents`,
-    fields: "files(id, name)",
-    pageSize: 20
-  } )
+  do {
+    const response = await drive.files.list ( {
+      q: `'${parentId}' in parents`,
+      fields: "nextPageToken, files(id, name)",
+      pageSize: 100,
+      pageToken
+    } )
+    if ( response.data.files ) {
+      results.push ( ...response.data.files )
+    }
+    pageToken = response.data.nextPageToken ?? undefined
+  } while ( pageToken )
 
-  return response.data.files || [ ]
+  return results
 }
 
 let cache: string = ""
 let newsletterDate: Date | null = null
+let inflightRequest: Promise<{ url: string }> | null = null
 
 export const router: FastifyPluginAsync = async app => {
   app.get ( "/newsletter", async ( _req, rep ) => {
@@ -57,36 +63,46 @@ export const router: FastifyPluginAsync = async app => {
         newsletterDate = null
       }
 
-      const yearName = format ( date, "yyyy" )
-      const monthName = monthFolderName ( date )
-
-      const yearFolder = ( await listFiles ( driveID ) )
-        .find ( f => f.name === yearName )
-
-      if ( !yearFolder ) {
-        return rep.status ( 404 ).send ( { error: `Year folder "${yearName}" not found` } )
+      if ( inflightRequest ) {
+        const result = await inflightRequest
+        return rep.send ( result )
       }
 
-      const monthFolder = ( await listFiles ( yearFolder.id ?? "" ) )
-        .find ( f => f.name === monthName )
+      inflightRequest = ( async ( ) => {
+        const yearName = format ( date, "yyyy" )
+        const monthName = monthFolderName ( date )
 
-      if ( !monthFolder ) {
-        return rep.status ( 404 ).send ( { error: `Month folder "${monthName}" not found` } )
-      }
+        const yearFolder = ( await listFiles ( driveID ) )
+          .find ( f => f.name === yearName )
 
-      const files = await listFiles ( monthFolder.id ?? "" )
-      const file = files.find ( f => f.name === `${dateStr}.pdf` )
+        if ( !yearFolder ) {
+          return { url: `https://drive.google.com/drive/folders/${driveID}` }
+        }
 
-      if ( file ) {
-        cache = `https://drive.google.com/file/d/${file.id}/view`
-        newsletterDate = date
-      }
+        const monthFolder = ( await listFiles ( yearFolder.id ?? "" ) )
+          .find ( f => f.name === monthName )
 
-      const url = file
-        ? `https://drive.google.com/file/d/${file.id}/view`
-        : `https://drive.google.com/drive/folders/${driveID}`
+        if ( !monthFolder ) {
+          return { url: `https://drive.google.com/drive/folders/${driveID}` }
+        }
 
-      return rep.send ( { url } )
+        const files = await listFiles ( monthFolder.id ?? "" )
+        const file = files.find ( f => f.name === `${dateStr}.pdf` )
+
+        if ( file ) {
+          cache = `https://drive.google.com/file/d/${file.id}/view`
+          newsletterDate = date
+        }
+
+        return {
+          url: file
+            ? `https://drive.google.com/file/d/${file.id}/view`
+            : `https://drive.google.com/drive/folders/${driveID}`
+        }
+      } ) ( ).finally ( ( ) => { inflightRequest = null } )
+
+      const result = await inflightRequest
+      return rep.send ( result )
     } catch ( err ) {
       console.error ( err )
       return rep.status ( 500 ).send ( { error: "Unable to retrieve newsletter URL" } )

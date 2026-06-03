@@ -1,35 +1,36 @@
-<div class="container mass-times-container" id="sunday-mass">
-  <div class="row sunday-times-padding-bottom">
-    <h3 class="mbr-section-title mbr-fonts-style text-center mb-0 display-2 emphasis-color">
-      <strong>Normal Sunday Mass Times</strong>
-    </h3>
-    <h5 class="mass-confession-info emphasis-color">
-      Times may vary, please see our Newsletter for more information.
-    </h5>
-    <h5 class="mass-confession-info emphasis-color">
-      Confessions are heard 30 minutes before every Mass.
-    </h5>
-    <div class="d-flex justify-content-center w-100 mt-2">
-      <a href="https://universalis.com/mass.htm" class="w-100 max-width-500">
-        <img src="https://universalis.com/banner.gif" alt="Universalis Mass Readings" class="w-100">
-      </a>
+<section class="mass-times-section" id="sunday-mass">
+  <div class="container">
+
+    <div class="section-heading">
+      <h2 class="display-2 font-bold emphasis-color">Sunday Mass Times</h2>
+      <div class="section-accent"></div>
+      <p class="display-4 mt-3 emphasis-color">Confessions are heard 30 minutes before every Mass.</p>
     </div>
-  </div>
-  <div class="row justify-content-center">
-    @for ( time of this.massTimes(); track time.church ) {
-      <div class="card col-12 col-md-6 col-lg-4 md-pb">
-        <div class="card-wrapper">
-          <div class="card-box text-left">
-            <div class="iconfont-wrapper churches-margin-bottom">
-              <app-icon class="card-title mb-4 emphasis-color" icon="church" iconSize="3x" />
-            </div>
-            <h5 class="card-title mbr-fonts-style display-7">
-              <strong>{{time.church}}</strong>
-            </h5>
-            <p class="card-text mbr-fonts-style display-7">{{time.time}}<br></p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
+      @for ( time of massTimes(); track time.church ) {
+        <div class="mass-card">
+          <div class="mass-card-icon">
+            <app-icon icon="church" />
+          </div>
+          <div class="mass-card-body">
+            <h5 class="mass-card-church">{{time.church}}</h5>
+            <p class="mass-card-time">{{time.time}}</p>
           </div>
         </div>
-      </div>
-    }
+      }
+    </div>
+
+    <div class="times-notice">
+      <app-icon icon="exclamation-triangle" class="notice-icon" />
+      <span>Times may vary — check our latest Newsletter for updates.</span>
+    </div>
+
+    <div class="universalis-wrapper">
+      <a href="https://universalis.com/mass.htm" target="_blank" rel="noopener noreferrer">
+        <img src="https://universalis.com/banner.gif" alt="Universalis Mass Readings" loading="lazy" class="universalis-banner">
+      </a>
+    </div>
+
   </div>
-</div>
+</section>

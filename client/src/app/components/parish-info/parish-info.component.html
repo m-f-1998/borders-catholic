@@ -1,0 +1,102 @@
+<section class="parish-info-section">
+  <div class="container">
+    <div class="section-heading">
+      <h2 class="display-2 font-bold emphasis-color">Our Parish</h2>
+      <div class="section-accent"></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+
+      <!-- Clergy -->
+      <div>
+        <h3 class="subsection-title">Clergy</h3>
+        <div class="flex flex-col gap-4">
+          @for (priest of priests(); track priest.name) {
+            <div class="priest-card">
+              <img appShimmer src="/api/img/{{priest.image}}?w=320&f=webp"
+                srcset="
+                    /api/img/{{priest.image}}?w=160&f=webp 160w,
+                    /api/img/{{priest.image}}?w=320&f=webp 320w
+                "
+                loading="lazy" decoding="async" sizes="80px" alt="{{priest.name}}"
+                class="priest-thumb" />
+              <div>
+                <p class="font-semibold emphasis-color">{{priest.name}}</p>
+                <p class="text-sm primary-standard-color font-medium">{{priest.role}}</p>
+                <p class="text-sm emphasis-color opacity-70 mt-1">{{priest.residence}}</p>
+              </div>
+            </div>
+          }
+          @if (priests().length === 0) {
+            <p class="emphasis-color opacity-50 italic">Clergy details coming soon.</p>
+          }
+        </div>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <h3 class="subsection-title">Get in Touch</h3>
+        <div class="flex flex-col gap-4">
+          <a class="contact-row" href="tel:{{phone()}}">
+            <div class="contact-icon"><app-icon icon="phone" /></div>
+            <span class="emphasis-color">{{phone()}}</span>
+          </a>
+          <a class="contact-row" href="mailto:{{email()}}">
+            <div class="contact-icon"><app-icon icon="envelope" /></div>
+            <span class="emphasis-color">{{email()}}</span>
+          </a>
+          @for (addr of address(); track addr.main) {
+            @if (addr.mapsUrl) {
+              <a class="contact-row items-start" [href]="addr.mapsUrl" target="_blank" rel="noopener noreferrer">
+                <div class="contact-icon mt-1"><app-icon icon="map-pin" /></div>
+                <div class="flex flex-col gap-0.5">
+                  <span class="emphasis-color text-sm leading-relaxed">{{addr.main}}</span>
+                  @if (addr.note) {
+                    <span class="address-note">{{addr.note}}</span>
+                  }
+                </div>
+              </a>
+            } @else {
+              <div class="contact-row items-start">
+                <div class="contact-icon mt-1"><app-icon icon="map-pin" /></div>
+                <div class="flex flex-col gap-0.5">
+                  <span class="emphasis-color text-sm leading-relaxed">{{addr.main}}</span>
+                  @if (addr.note) {
+                    <span class="address-note">{{addr.note}}</span>
+                  }
+                </div>
+              </div>
+            }
+          }
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Full-width map below the grid -->
+    @if (mapMarkers().length > 0) {
+      <div class="parish-map-wrapper">
+        @if (mapState().loading) {
+          <div class="parish-map-placeholder">
+            <app-icon icon="spinner" iconAnimation="spin" class="primary-standard-color" />
+          </div>
+        } @else if (mapState().error) {
+          <div class="parish-map-placeholder">
+            <p class="emphasis-color text-sm opacity-60">Map unavailable</p>
+          </div>
+        } @else {
+          <google-map
+            height="360px"
+            width="100%"
+            mapId="41dbf48a8e04a109"
+            [center]="mapCenter() ?? mapMarkers()[0]"
+            [zoom]="mapZoom()">
+            @for (marker of mapMarkers(); track marker.lat) {
+              <map-advanced-marker [position]="marker" />
+            }
+          </google-map>
+        }
+      </div>
+    }
+  </div>
+</section>

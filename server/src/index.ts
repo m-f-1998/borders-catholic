@@ -22,17 +22,13 @@ import cors from "@fastify/cors"
 import { router as staticRouter } from "./routes/static.js"
 import { router as driveRouter } from "./routes/drive.js"
 import { router as imagesRouter } from "./routes/images.js"
+import { router as mapsRouter } from "./routes/maps.js"
 
 import { randomBytes } from "crypto"
 
 const app = Fastify ( {
   logger: false,
-  // logger: {
-  //   level: isDevMode ( ) ? "debug" : "warn",
-  //   redact: { paths: [ "req.headers.authorization", "req.headers.cookie" ], censor: "[REDACTED]" }
-  // },
   trustProxy: "loopback",
-  // http2: true
 } )
 
 await app.register ( sensible )
@@ -40,7 +36,7 @@ await app.register ( cookie )
 await app.register ( formbody )
 
 await app.register ( compress, {
-  threshold: 1024 * 20,
+  threshold: 1024,
   zlibOptions: {
     flush: zlib.constants.Z_SYNC_FLUSH // Forces chunks to be sent immediately
   }
@@ -48,11 +44,16 @@ await app.register ( compress, {
 
 await app.register ( cors, {
   origin: ( origin, callback ) => {
-    const allowedOrigins = [ "http://localhost:4200", "http://localhost:3000", "https://borderscatholic.co.uk" ]
-    if ( !origin || allowedOrigins.includes ( origin ) ) {
+    const allowedOrigins = [
+      "http://localhost:4200",
+      "http://localhost:3000",
+      "https://borderscatholic.co.uk",
+      "https://dev.borderscatholic.co.uk"
+    ]
+    if ( !origin || allowedOrigins.some ( o => origin === o || origin.endsWith ( ".borderscatholic.co.uk" ) ) ) {
       callback ( null, true )
     } else {
-      callback ( new Error ( "Not allowed by CORS" ), false )
+      callback ( null, false )
     }
   },
   methods: [ "GET", "POST" ],
@@ -81,6 +82,9 @@ const logger: pino.Logger = pino ( {
 
 app.addHook ( "onRequest", async ( req, _reply ) => {
   req.startTime = Date.now ( )
+  const nonce = randomBytes ( 16 ).toString ( "base64" )
+  req.cspNonce = nonce
+  ;( req.raw as IncomingMessage ).cspNonce = nonce
 } )
 
 // Add hook to flag slow requests
@@ -100,26 +104,15 @@ await app.register ( helmet, {
       ],
       styleSrc: [
         "'self'",
-        // ( req: IncomingMessage ) => {
-        //   if ( req.cspNonce ) {
-        //     return `'nonce-${req.cspNonce}'`
-        //   }
-        //   return ""
-        // },
-        "'unsafe-inline'",
+        ( req: IncomingMessage ) => req.cspNonce ? `'nonce-${req.cspNonce}'` : "",
         "https://fonts.googleapis.com"
       ],
       scriptSrcElem: [
         "'self'",
-        "'unsafe-inline'",
-        // ( req: IncomingMessage ) => {
-        //   if ( req.cspNonce ) {
-        //     return `'nonce-${req.cspNonce}'`
-        //   }
-        //   return ""
-        // },
+        ( req: IncomingMessage ) => req.cspNonce ? `'nonce-${req.cspNonce}'` : "",
         "https://www.googletagmanager.com",
-        "https://maps.googleapis.com"
+        "https://maps.googleapis.com",
+        "https://static.cloudflareinsights.com"
       ],
       imgSrc: [
         "'self'",
@@ -134,11 +127,17 @@ await app.register ( helmet, {
         "https://www.googleapis.com",
         "https://\*.google-analytics.com",
         "https://\*.google.com",
-        "https://maps.googleapis.com"
+        "https://maps.googleapis.com",
+        "https://cloudflareinsights.com"
       ],
       frameSrc: [
         "'self'",
         "https://www.google.com"
+      ],
+      fontSrc: [
+        "'self'",
+        "data:",
+        "https://fonts.gstatic.com"
       ]
     }
   },
@@ -175,14 +174,9 @@ export const logResponse = ( req: FastifyRequest, reply: FastifyReply, isProxy =
   logger.info ( body )
 }
 
-app.addHook ( "onRequest", async request => {
-  const nonce = randomBytes ( 16 ).toString ( "base64" )
-  request.cspNonce = nonce
-  ;( request.raw as IncomingMessage ).cspNonce = nonce
-} )
-
 app.register ( imagesRouter, { prefix: "/api/img" } )
 app.register ( driveRouter, { prefix: "/api/drive" } )
+app.register ( mapsRouter, { prefix: "/api/maps" } )
 app.register ( staticRouter, { prefix: "/" } )
 
 console.log ( "Server is starting..." )
