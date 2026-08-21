@@ -38,6 +38,7 @@ export default defineConfig (
       "@angular-eslint/prefer-signals": "off",
       // * END TODO
       "@angular-eslint/prefer-on-push-component-change-detection": "error",
+      "@angular-eslint/inject-at-top": "off",
       "@angular-eslint/component-selector": [
         "error",
         {

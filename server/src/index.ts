@@ -13,7 +13,7 @@ import { IncomingMessage } from "http"
 
 import helmet from "@fastify/helmet"
 import compress from "@fastify/compress"
-import cookie from "@fastify/cookie"
+import { fastifyCookie as cookie } from "@fastify/cookie"
 import rateLimit from "@fastify/rate-limit"
 import sensible from "@fastify/sensible"
 import formbody from "@fastify/formbody"

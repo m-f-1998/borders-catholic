@@ -1,10 +1,8 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http"
-import { inject, Injectable, isDevMode } from "@angular/core"
+import { inject, Service, isDevMode } from "@angular/core"
 import { firstValueFrom } from "rxjs"
 
-@Injectable ( {
-  providedIn: "root"
-} )
+@Service ( { } )
 export class ApiService {
   private readonly httpClient: HttpClient = inject ( HttpClient )
 
