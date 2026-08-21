@@ -7,11 +7,13 @@ config ( { path: envPath, quiet: true } )
 const isDevMode = ( ) => process.env [ "DEV" ] === "true"
 
 import sharp from "sharp"
-import { stat } from "fs/promises"
+import { createReadStream } from "fs"
+import { mkdir, stat, writeFile } from "fs/promises"
 import { FastifyPluginAsync } from "fastify"
 import { createHash } from "crypto"
 
 const IMAGE_DIR = join ( process.cwd ( ), "../", "assets", "img", )
+const CACHE_DIR = join ( process.cwd ( ), ".cache", "img" )
 
 const SUPPORTED_FORMATS = [ "webp", "avif", "jpeg", "png" ]
 
@@ -22,8 +24,31 @@ const MIME_TYPES: Record<string, string> = {
   png: "image/png",
 }
 
+const formatExtension = ( format: string ) => format === "jpeg" ? "jpg" : format
+
+const cachePath = ( etag: string, format: string ) =>
+  join ( CACHE_DIR, `${etag}.${formatExtension ( format )}` )
+
 sharp.cache ( !isDevMode ( ) )
 sharp.concurrency ( isDevMode ( ) ? 1 : 4 )
+
+const sendImage = (
+  rep: { type: ( t: string ) => unknown; header: ( k: string, v: string | number ) => unknown; send: ( b: unknown ) => unknown },
+  bufferOrStream: Buffer | ReturnType<typeof createReadStream>,
+  format: string,
+  safeName: string,
+  lastModified: string,
+  etag: string,
+  contentLength: number
+) => {
+  rep.type ( MIME_TYPES [ format ] ?? "application/octet-stream" )
+  rep.header ( "content-length", contentLength )
+  rep.header ( "content-disposition", `inline; filename="${safeName}"` )
+  rep.header ( "cache-control", "public, max-age=31536000" )
+  rep.header ( "last-modified", lastModified )
+  rep.header ( "etag", `"${etag}"` )
+  return rep.send ( bufferOrStream )
+}
 
 export const router: FastifyPluginAsync = async app => {
   app.get ( "/*", async ( req, rep ) => {
@@ -70,6 +95,7 @@ export const router: FastifyPluginAsync = async app => {
       const lastModified = fileStats.mtime.toUTCString ( )
       const etagBase = `${fileStats.mtimeMs}-${fileStats.size}-${width}-${height}-${format}-${quality}`
       const etag = createHash ( "sha1" ).update ( etagBase ).digest ( "hex" )
+      const safeName = basename ( filename ).replace ( /"/g, "" ).replace ( /\s/g, "_" )
 
       const ifNoneMatch = req.headers [ "if-none-match" ]
       if ( ifNoneMatch === `"${etag}"` ) {
@@ -78,6 +104,22 @@ export const router: FastifyPluginAsync = async app => {
       const ifModifiedSince = req.headers [ "if-modified-since" ]
       if ( ifModifiedSince && new Date ( ifModifiedSince ) >= fileStats.mtime ) {
         return rep.status ( 304 ).send ( )
+      }
+
+      if ( !isDevMode ( ) ) {
+        const cached = cachePath ( etag, format )
+        const cacheStats = await stat ( cached ).catch ( ( ) => null )
+        if ( cacheStats?.isFile ( ) ) {
+          return sendImage (
+            rep,
+            createReadStream ( cached ),
+            format,
+            safeName,
+            lastModified,
+            etag,
+            cacheStats.size
+          )
+        }
       }
 
       let transformer = sharp ( inputPath )
@@ -98,14 +140,13 @@ export const router: FastifyPluginAsync = async app => {
       }
 
       const buffer = await transformer.toBuffer ( )
-      const safeName = basename ( filename ).replace ( /"/g, "" ).replace ( /\s/g, "_" )
-      rep.type ( MIME_TYPES [ format ] ?? "application/octet-stream" )
-      rep.header ( "content-length", buffer.length )
-      rep.header ( "content-disposition", `inline; filename="${safeName}"` )
-      rep.header ( "cache-control", "public, max-age=31536000" )
-      rep.header ( "last-modified", lastModified )
-      rep.header ( "etag", `"${etag}"` )
-      return rep.send ( buffer )
+
+      if ( !isDevMode ( ) ) {
+        await mkdir ( CACHE_DIR, { recursive: true } )
+        await writeFile ( cachePath ( etag, format ), buffer )
+      }
+
+      return sendImage ( rep, buffer, format, safeName, lastModified, etag, buffer.length )
     } catch ( err ) {
       console.error ( err )
       return rep.status ( 500 ).send ( "Error processing image" )

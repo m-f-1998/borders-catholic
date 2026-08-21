@@ -1,0 +1,10 @@
+<google-map
+  height="360px"
+  width="100%"
+  mapId="41dbf48a8e04a109"
+  [center]="center() ?? markers()[0]"
+  [zoom]="zoom()">
+  @for (marker of markers(); track marker.lat) {
+    <map-advanced-marker [position]="marker" />
+  }
+</google-map>

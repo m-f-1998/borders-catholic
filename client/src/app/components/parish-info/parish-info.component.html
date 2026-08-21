@@ -85,16 +85,17 @@
             <p class="emphasis-color text-sm opacity-60">Map unavailable</p>
           </div>
         } @else {
-          <google-map
-            height="360px"
-            width="100%"
-            mapId="41dbf48a8e04a109"
-            [center]="mapCenter() ?? mapMarkers()[0]"
-            [zoom]="mapZoom()">
-            @for (marker of mapMarkers(); track marker.lat) {
-              <map-advanced-marker [position]="marker" />
-            }
-          </google-map>
+          @defer (on viewport) {
+            <app-parish-map
+              [markers]="mapMarkers()"
+              [center]="mapCenter()"
+              [zoom]="mapZoom()"
+            />
+          } @placeholder {
+            <div class="parish-map-placeholder">
+              <app-icon icon="spinner" iconAnimation="spin" class="primary-standard-color" />
+            </div>
+          }
         }
       </div>
     }

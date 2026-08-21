@@ -58,7 +58,7 @@ export class HomeComponent {
   public async openNewsletter ( ) {
     this.loadingNewsletter.set ( true )
     try {
-      const response = ( await this.apiSvc.get ( "/api/drive/newsletter" ) ) as { url?: string }
+      const response = await this.apiSvc.get<{ url?: string }> ( "/api/drive/newsletter" )
       if ( response.url ) {
         window.open ( response.url, "_blank", "noopener,noreferrer" )
       } else {

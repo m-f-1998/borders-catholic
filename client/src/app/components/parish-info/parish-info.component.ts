@@ -2,8 +2,8 @@
 import { ChangeDetectionStrategy, Component, inject, input, InputSignal, OnInit, signal, WritableSignal } from "@angular/core"
 import { IconComponent } from "@app/icon/icon.component"
 import { ImgShimmerDirective } from "@app/directives/img-shimmer.directive"
-import { GoogleMapsModule } from "@angular/google-maps"
 import { MapsService } from "@services/maps.service"
+import { ParishMapComponent } from "./parish-map.component"
 
 export interface Priest {
   name: string
@@ -25,7 +25,7 @@ export interface MapMarker {
 
 @Component ( {
   selector: "app-parish-info",
-  imports: [ IconComponent, ImgShimmerDirective, GoogleMapsModule ],
+  imports: [ IconComponent, ImgShimmerDirective, ParishMapComponent ],
   templateUrl: "./parish-info.component.html",
   styleUrl: "./parish-info.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush

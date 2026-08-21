@@ -73,7 +73,7 @@ export const router: FastifyPluginAsync = async app => {
       const metaTag = `<meta name="csp-nonce" content="${nonce}">`
       html = html.replace ( "</head>", `${metaTag}</head>` )
     }
-    const heroPreload = `<link rel="preload" as="image" href="/api/img/new-header.jpg" fetchpriority="high">`
+    const heroPreload = `<link rel="preload" as="image" href="/api/img/new-header.jpg?w=1920&f=webp&q=80" fetchpriority="high" type="image/webp">`
     html = html.replace ( "</head>", `${heroPreload}</head>` )
     html = loadGoogleMaps ( html, nonce )
     if ( !isDevMode ( ) ) html = injectGoogleTagManager ( html, nonce )

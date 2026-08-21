@@ -50,8 +50,8 @@
               "aot": true,
               "sourceMap": {
                 "scripts": true,
-                "styles": true,
-                "hidden": false
+                "styles": false,
+                "hidden": true
               },
               "optimization": {
                 "styles": {
