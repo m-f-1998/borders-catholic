@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal, WritableSignal } from "@angular/core"
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, inject, signal, WritableSignal } from "@angular/core"
 import { ExpandedImageComponent } from "@components/expanded-image/expanded-image.component"
 import { SundayMassTimesComponent } from "@components/sunday-mass-times/sunday-mass-times.component"
 import { HeaderComponent } from "@components/header/header.component"
@@ -49,30 +49,77 @@ export class HomeComponent {
     this.showAllGallery ( ) ? this.images : this.images.slice ( 0, this.GalleryLimit )
   )
 
+  private newsletterUrl: string | null = null
+  private newsletterRequest: Promise<string | null> | null = null
+  private readonly archiveUrl = "https://drive.google.com/drive/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG"
   private readonly apiSvc: ApiService = inject ( ApiService )
+
+  public constructor ( ) {
+    afterNextRender ( ( ) => {
+      void this.fetchNewsletter ( ).catch ( ( ) => undefined )
+    } )
+  }
 
   public expandImage ( index: number ) {
     this.expandedImageIndex.set ( index )
   }
 
-  public async openNewsletter ( ) {
+  public openNewsletter ( ) {
+    if ( this.newsletterUrl ) {
+      window.open ( this.newsletterUrl, "_blank", "noopener,noreferrer" )
+      return
+    }
+
+    // Open the tab inside the click. Waiting for Drive first makes the browser drop the popup.
+    const popup = window.open ( "", "_blank" )
+    void this.revealNewsletter ( popup )
+  }
+
+  public openNewsletterArchive ( ) {
+    window.open ( this.archiveUrl, "_blank", "noopener,noreferrer" )
+  }
+
+  private async revealNewsletter ( popup: Window | null ) {
     this.loadingNewsletter.set ( true )
     try {
-      const response = await this.apiSvc.get<{ url?: string }> ( "/api/drive/newsletter" )
-      if ( response.url ) {
-        window.open ( response.url, "_blank", "noopener,noreferrer" )
-      } else {
-        this.openNewsletterArchive ( )
-      }
+      const url = await this.fetchNewsletter ( ) ?? this.archiveUrl
+      this.navigate ( popup, url )
     } catch ( error ) {
       console.error ( "Error fetching newsletter link:", error )
-      this.openNewsletterArchive ( )
+      this.navigate ( popup, this.archiveUrl )
     } finally {
       this.loadingNewsletter.set ( false )
     }
   }
 
-  public openNewsletterArchive ( ) {
-    window.open ( "https://drive.google.com/drive/folders/1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG", "_blank", "noopener,noreferrer" )
+  private navigate ( popup: Window | null, url: string ) {
+    if ( popup && !popup.closed ) {
+      popup.location.replace ( url )
+      popup.opener = null
+      return
+    }
+    window.open ( url, "_blank", "noopener,noreferrer" )
+  }
+
+  private fetchNewsletter ( ): Promise<string | null> {
+    if ( this.newsletterUrl ) return Promise.resolve ( this.newsletterUrl )
+    if ( !this.newsletterRequest ) {
+      this.newsletterRequest = this.apiSvc
+        .get<{ url?: string; available?: boolean }> ( "/api/drive/newsletter" )
+        .then ( response => {
+          const url = response.url ?? null
+          if ( response.available && url ) {
+            this.newsletterUrl = url
+            return url
+          }
+          this.newsletterRequest = null
+          return url
+        } )
+        .catch ( error => {
+          this.newsletterRequest = null
+          throw error
+        } )
+    }
+    return this.newsletterRequest
   }
 }

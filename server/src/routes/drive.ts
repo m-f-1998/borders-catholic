@@ -6,105 +6,170 @@ config ( { path: envPath, quiet: true } )
 
 const isDevMode = ( ) => process.env [ "DEV" ] === "true"
 
-import { addDays, format, getDay, subDays } from "date-fns"
-import { google } from "googleapis"
-import { FastifyPluginAsync } from "fastify"
+import type { FastifyPluginAsync, FastifyReply } from "fastify"
+import { google, type drive_v3 } from "googleapis"
 
-const driveID = "1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG"
+const DRIVE_ID = "1tElBwGIR2-0bABeD90RZDdAwoJ77mZMG"
+const ARCHIVE_URL = `https://drive.google.com/drive/folders/${DRIVE_ID}`
+const MISS_TTL_MS = 5 * 60 * 1000
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+]
 
-const getPreviousSunday = ( ) => {
-  const today = new Date ( )
-  const isSaturday = getDay ( today ) === 6
-  const sunday = isSaturday ? addDays ( today, 1 ) : subDays ( today, getDay ( today ) )
-  return format ( sunday, "yyyy-MM-dd" )  // return formatted date
+type NewsletterResult = {
+  url: string
+  available: boolean
 }
 
-const monthFolderName = ( date: Date ) => `${format ( date, "MM" )} - ${format ( date, "LLLL" )}`
+type FolderCache = {
+  year: string
+  yearId: string
+  monthName?: string
+  monthId?: string
+}
 
-const listFiles = async ( parentId: string ) => {
-  if ( !parentId ) return [ ]
+type CachedNewsletter = {
+  dateStr: string
+  result: NewsletterResult
+  expiresAt: number
+}
 
-  const referrer = isDevMode ( ) ? "http://localhost:3000" : "https://borderscatholic.co.uk"
-  const drive = google.drive ( { version: "v3", auth: process.env [ "GOOGLE_KEY" ], referrer } )
+// Saturday in Europe/London resolves to the coming Sunday so the vigil Mass
+// can open that PDF once it has been uploaded.
+export const newsletterSunday = ( now = new Date ( ) ) => {
+  const formatted = new Intl.DateTimeFormat ( "en-CA", {
+    timeZone: "Europe/London",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  } ).format ( now )
+  const [ year, month, day ] = formatted.split ( "-" ).map ( part => Number ( part ) )
+  const date = new Date ( Date.UTC ( year, month - 1, day ) )
+  const dayOfWeek = date.getUTCDay ( )
+  const delta = dayOfWeek === 6 ? 1 : -dayOfWeek
+  date.setUTCDate ( date.getUTCDate ( ) + delta )
+  return date.toISOString ( ).slice ( 0, 10 )
+}
 
-  const results: Array<{ id?: string | null; name?: string | null }> = []
-  let pageToken: string | undefined
+const monthFolderName = ( dateStr: string ) => {
+  const month = Number ( dateStr.slice ( 5, 7 ) )
+  const label = MONTHS [ month - 1 ]
+  if ( !label ) return null
+  return `${dateStr.slice ( 5, 7 )} - ${label}`
+}
 
-  do {
-    const response = await drive.files.list ( {
-      q: `'${parentId}' in parents`,
-      fields: "nextPageToken, files(id, name)",
-      pageSize: 100,
-      pageToken
-    } )
-    if ( response.data.files ) {
-      results.push ( ...response.data.files )
+const referrer = ( ) => isDevMode ( ) ? "http://localhost:3000" : "https://borderscatholic.co.uk"
+
+let driveService: drive_v3.Drive | undefined
+
+const driveClient = ( ) => {
+  driveService ??= google.drive ( {
+    version: "v3",
+    auth: process.env [ "GOOGLE_KEY" ]
+  } )
+  return driveService
+}
+
+const escapeQuery = ( value: string ) => value.replace ( /['\\]/g, "\\$&" )
+
+const findChild = async ( parentId: string, name: string ) => {
+  if ( !/^[a-zA-Z0-9_-]+$/.test ( parentId ) ) return null
+
+  const response = await driveClient ( ).files.list ( {
+    q: `'${parentId}' in parents and name = '${escapeQuery ( name )}' and trashed = false`,
+    fields: "files(id)",
+    pageSize: 1
+  }, {
+    headers: { Referer: referrer ( ) },
+    timeout: 8000
+  } )
+
+  return response.data.files?.[ 0 ]?.id || null
+}
+
+let folderCache: FolderCache | null = null
+
+const resolveNewsletter = async ( dateStr: string ): Promise<NewsletterResult> => {
+  const year = dateStr.slice ( 0, 4 )
+  const monthName = monthFolderName ( dateStr )
+  if ( !monthName ) return { url: ARCHIVE_URL, available: false }
+
+  let folders: FolderCache | null = folderCache?.year === year ? folderCache : null
+  if ( !folders ) {
+    const yearId = await findChild ( DRIVE_ID, year )
+    if ( !yearId ) return { url: ARCHIVE_URL, available: false }
+    folders = { year, yearId }
+    folderCache = folders
+  }
+
+  let monthId = folders.monthName === monthName ? folders.monthId ?? null : null
+  if ( !monthId ) {
+    monthId = await findChild ( folders.yearId, monthName )
+    if ( !monthId ) return { url: ARCHIVE_URL, available: false }
+    folders = { year, yearId: folders.yearId, monthName, monthId }
+    folderCache = folders
+  }
+
+  const fileId = await findChild ( monthId, `${dateStr}.pdf` )
+  if ( !fileId ) return { url: ARCHIVE_URL, available: false }
+
+  return {
+    url: `https://drive.google.com/file/d/${fileId}/view`,
+    available: true
+  }
+}
+
+let cached: CachedNewsletter | null = null
+let inflight: { dateStr: string; task: Promise<NewsletterResult> } | null = null
+
+const readCache = ( dateStr: string ) => {
+  if ( !cached || cached.dateStr !== dateStr ) return null
+  if ( cached.result.available ) return cached.result
+  if ( cached.expiresAt > Date.now ( ) ) return cached.result
+  return null
+}
+
+const loadNewsletter = ( dateStr: string ) => {
+  if ( inflight?.dateStr === dateStr ) return inflight.task
+
+  const task = resolveNewsletter ( dateStr ).then ( result => {
+    cached = {
+      dateStr,
+      result,
+      expiresAt: result.available ? 0 : Date.now ( ) + MISS_TTL_MS
     }
-    pageToken = response.data.nextPageToken ?? undefined
-  } while ( pageToken )
+    return result
+  } )
 
-  return results
+  inflight = { dateStr, task }
+  void task.finally ( ( ) => {
+    if ( inflight?.task === task ) inflight = null
+  } )
+  return task
 }
 
-let cache: string = ""
-let newsletterDate: Date | null = null
-let inflightRequest: Promise<{ url: string }> | null = null
+const errorMessage = ( err: unknown ) => {
+  const message = err instanceof Error ? err.message : "Drive request failed"
+  return message.replace ( /key=[^&\s]+/gi, "key=redacted" )
+}
+
+const sendResult = ( rep: FastifyReply, result: NewsletterResult ) => {
+  rep.header ( "Cache-Control", result.available ? "public, max-age=300" : "no-store" )
+  return rep.send ( result )
+}
 
 export const router: FastifyPluginAsync = async app => {
   app.get ( "/newsletter", async ( _req, rep ) => {
+    const dateStr = newsletterSunday ( )
+
+    const hit = readCache ( dateStr )
+    if ( hit ) return sendResult ( rep, hit )
+
     try {
-      const dateStr = getPreviousSunday ( )
-      const date = new Date ( dateStr )
-
-      if ( cache && newsletterDate && format ( newsletterDate, "yyyy-MM-dd" ) === dateStr ) {
-        return rep.send ( { url: cache } )
-      } else {
-        cache = ""
-        newsletterDate = null
-      }
-
-      if ( inflightRequest ) {
-        const result = await inflightRequest
-        return rep.send ( result )
-      }
-
-      inflightRequest = ( async ( ) => {
-        const yearName = format ( date, "yyyy" )
-        const monthName = monthFolderName ( date )
-
-        const yearFolder = ( await listFiles ( driveID ) )
-          .find ( f => f.name === yearName )
-
-        if ( !yearFolder ) {
-          return { url: `https://drive.google.com/drive/folders/${driveID}` }
-        }
-
-        const monthFolder = ( await listFiles ( yearFolder.id ?? "" ) )
-          .find ( f => f.name === monthName )
-
-        if ( !monthFolder ) {
-          return { url: `https://drive.google.com/drive/folders/${driveID}` }
-        }
-
-        const files = await listFiles ( monthFolder.id ?? "" )
-        const file = files.find ( f => f.name === `${dateStr}.pdf` )
-
-        if ( file ) {
-          cache = `https://drive.google.com/file/d/${file.id}/view`
-          newsletterDate = date
-        }
-
-        return {
-          url: file
-            ? `https://drive.google.com/file/d/${file.id}/view`
-            : `https://drive.google.com/drive/folders/${driveID}`
-        }
-      } ) ( ).finally ( ( ) => { inflightRequest = null } )
-
-      const result = await inflightRequest
-      return rep.send ( result )
+      return sendResult ( rep, await loadNewsletter ( dateStr ) )
     } catch ( err ) {
-      console.error ( err )
+      console.error ( "Newsletter lookup failed:", errorMessage ( err ) )
       return rep.status ( 500 ).send ( { error: "Unable to retrieve newsletter URL" } )
     }
   } )
